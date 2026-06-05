@@ -1,75 +1,61 @@
 "use client";
 
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import type { TermCategory, UXTerm } from "@/types/playbook";
 import { TERMS } from "@/data/terms";
 import { CATEGORIES } from "@/data/categories";
-import { PlaybookTopbar } from "./PlaybookTopbar";
-import { CategorySidebar } from "./CategorySidebar";
+import {
+  AppShell,
+  Chip,
+  CountPill,
+  EmptyState,
+  FilterToolbar,
+  PrimaryButton,
+  SearchInput,
+  SidebarCategoryNav,
+} from "./workspace";
 import { TermRow } from "./TermRow";
 import { TermDetailPanel } from "./TermDetailPanel";
-import { EmptyState } from "./EmptyState";
-import { SearchInput } from "./SearchInput";
 
 function searchTerms(terms: UXTerm[], q: string): UXTerm[] {
   const query = q.toLowerCase().trim();
   if (!query) return terms;
-  return terms.filter(
-    (t) =>
-      t.term.toLowerCase().includes(query) ||
-      t.shortDefinition.toLowerCase().includes(query) ||
-      t.fullDefinition.toLowerCase().includes(query) ||
-      t.tags.some((tag) => tag.toLowerCase().includes(query)) ||
-      t.prompts.some((p) => p.toLowerCase().includes(query))
-  );
+  return terms.filter((t) => {
+    const haystack = [
+      t.term,
+      ...(t.aliases ?? []),
+      t.shortDefinition,
+      t.fullDefinition,
+      t.whyItMatters,
+      ...t.examples,
+      ...t.prompts,
+      ...t.tags,
+    ].join(" ").toLowerCase();
+    return haystack.includes(query);
+  });
 }
 
 export function PlaybookClient() {
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<TermCategory | "all">("all");
   const [bookmarks, setBookmarks] = useState<Set<string>>(new Set());
-  const [selectedTerm, setSelectedTerm] = useState<UXTerm | null>(null);
+  const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [showMobileDetail, setShowMobileDetail] = useState(false);
 
-  // Load persisted state after mount via async callback (hydration-safe, avoids set-state-in-effect rule)
   useEffect(() => {
     const tid = setTimeout(() => {
       try {
-        const savedCat = localStorage.getItem("playbook-category") as TermCategory | "all";
-        if (savedCat) setActiveCategory(savedCat);
+        const savedCat = localStorage.getItem("playbook-category") as TermCategory | "all" | null;
+        if (savedCat === "all") setActiveCategory("all");
+        else if (savedCat && CATEGORIES.some((category) => category.id === savedCat)) setActiveCategory(savedCat);
         const savedBookmarks = localStorage.getItem("playbook-bookmarks");
         if (savedBookmarks) setBookmarks(new Set(JSON.parse(savedBookmarks)));
-      } catch { /* ignore */ }
+      } catch {
+        /* ignore persisted preference failures */
+      }
     }, 0);
     return () => clearTimeout(tid);
-  }, []);
-
-  const handleCategorySelect = useCallback((cat: TermCategory | "all") => {
-    setActiveCategory(cat);
-    setQuery("");
-    setSelectedTerm(null);
-    setShowMobileDetail(false);
-    try { localStorage.setItem("playbook-category", cat); } catch { /* ignore */ }
-  }, []);
-
-  const handleBookmark = useCallback((slug: string) => {
-    setBookmarks((prev) => {
-      const next = new Set(prev);
-      if (next.has(slug)) next.delete(slug);
-      else next.add(slug);
-      try { localStorage.setItem("playbook-bookmarks", JSON.stringify([...next])); } catch { /* ignore */ }
-      return next;
-    });
-  }, []);
-
-  const handleSelectTerm = useCallback((term: UXTerm) => {
-    setSelectedTerm(term);
-    setShowMobileDetail(true);
-  }, []);
-
-  const handleBackMobile = useCallback(() => {
-    setShowMobileDetail(false);
   }, []);
 
   const filtered = useMemo(() => {
@@ -77,102 +63,116 @@ export function PlaybookClient() {
     return searchTerms(byCat, query);
   }, [activeCategory, query]);
 
+  const selectedTerm = useMemo(() => {
+    if (filtered.length === 0) return null;
+    return filtered.find((term) => term.slug === selectedSlug) ?? filtered[0];
+  }, [filtered, selectedSlug]);
+
+  const handleCategorySelect = useCallback((cat: TermCategory | "all") => {
+    setActiveCategory(cat);
+    setQuery("");
+    setShowMobileDetail(false);
+    try {
+      localStorage.setItem("playbook-category", cat);
+    } catch {
+      /* ignore */
+    }
+  }, []);
+
+  const handleBookmark = useCallback((slug: string) => {
+    setBookmarks((prev) => {
+      const next = new Set(prev);
+      if (next.has(slug)) next.delete(slug);
+      else next.add(slug);
+      try {
+        localStorage.setItem("playbook-bookmarks", JSON.stringify([...next]));
+      } catch {
+        /* ignore */
+      }
+      return next;
+    });
+  }, []);
+
+  const handleSelectTerm = useCallback((term: UXTerm) => {
+    setSelectedSlug(term.slug);
+    setShowMobileDetail(true);
+  }, []);
+
   const handleClear = useCallback(() => {
     setQuery("");
     setActiveCategory("all");
-    try { localStorage.setItem("playbook-category", "all"); } catch { /* ignore */ }
+    setShowMobileDetail(false);
+    try {
+      localStorage.setItem("playbook-category", "all");
+    } catch {
+      /* ignore */
+    }
   }, []);
 
-  const activeCatMeta = activeCategory === "all"
-    ? null
-    : CATEGORIES.find((c) => c.id === activeCategory);
+  const activeCatMeta = activeCategory === "all" ? null : CATEGORIES.find((c) => c.id === activeCategory);
 
   return (
-    <div className="h-screen flex flex-col bg-bg-main overflow-hidden">
-      <PlaybookTopbar
-        searchQuery={query}
-        onSearch={setQuery}
-        totalCount={TERMS.length}
-      />
-
-      <div className="flex flex-1 min-h-0">
-        {/* Left sidebar — desktop only */}
-        <aside className="hidden lg:flex flex-col w-56 shrink-0 border-r border-border bg-bg-surface overflow-y-auto">
-          <CategorySidebar activeCategory={activeCategory} onSelect={handleCategorySelect} />
-        </aside>
-
-        {/* Center list */}
-        <div className={`flex flex-col border-r border-border bg-bg-surface
-          ${showMobileDetail ? "hidden lg:flex" : "flex"}
-          ${selectedTerm ? "w-full lg:w-80 xl:w-96 lg:shrink-0" : "flex-1"}
-        `}>
-          {/* Mobile category chips */}
-          <div className="lg:hidden flex overflow-x-auto gap-1.5 px-3 py-2.5 border-b border-border shrink-0">
-            <button
-              onClick={() => handleCategorySelect("all")}
-              className={`shrink-0 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                activeCategory === "all"
-                  ? "bg-primary text-white shadow-sm"
-                  : "bg-bg-soft text-text-secondary hover:bg-bg-hover"
-              }`}
-            >
-              All ({TERMS.length})
-            </button>
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => handleCategorySelect(cat.id)}
-                className={`shrink-0 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                  activeCategory === cat.id
-                    ? "bg-primary text-white shadow-sm"
-                    : "bg-bg-soft text-text-secondary hover:bg-bg-hover"
-                }`}
-              >
-                {cat.icon} {cat.label}
-              </button>
+    <AppShell
+      activeRoute="playbook"
+      sidebar={<SidebarCategoryNav activeCategory={activeCategory} onSelect={handleCategorySelect} />}
+      topbarSlot={
+        <div className="mx-auto flex max-w-2xl items-center gap-2">
+          <SearchInput
+            value={query}
+            onChange={setQuery}
+            placeholder="Search terms, aliases, definitions, prompts..."
+            label="Search playbook"
+            className="min-w-0 flex-1"
+          />
+        </div>
+      }
+    >
+      <div className="grid h-full min-h-0 grid-cols-1 overflow-hidden lg:grid-cols-[360px_minmax(0,1fr)] xl:grid-cols-[400px_minmax(0,1fr)]">
+        <section className={`${showMobileDetail ? "hidden lg:flex" : "flex"} min-h-0 flex-col border-r border-border bg-bg-surface`}>
+          <FilterToolbar className="lg:hidden">
+            <Chip active={activeCategory === "all"} onClick={() => handleCategorySelect("all")}>
+              All <span className="mono tabular-nums">{TERMS.length}</span>
+            </Chip>
+            {CATEGORIES.map((category) => (
+              <Chip key={category.id} active={activeCategory === category.id} onClick={() => handleCategorySelect(category.id)}>
+                {category.label}
+              </Chip>
             ))}
-          </div>
+          </FilterToolbar>
 
-          {/* Mobile search */}
-          <div className="lg:hidden px-3 py-2 border-b border-border shrink-0">
-            <SearchInput value={query} onChange={setQuery} />
-          </div>
-
-          {/* List header */}
-          <div className="px-4 py-2.5 border-b border-border shrink-0">
-            <div className="flex items-center justify-between">
-              <p className="text-xs text-text-muted">
-                {activeCatMeta && (
-                  <span className="mr-1.5">{activeCatMeta.icon}</span>
-                )}
-                <span className="font-semibold text-text-primary">{filtered.length}</span>
-                {" "}
-                {activeCategory === "all" ? "terms total" : "terms"}
-                {query && (
-                  <span className="ml-1 text-text-muted">
-                    for &quot;{query}&quot;
-                  </span>
-                )}
-              </p>
+          <div className="border-b border-border px-4 py-3">
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <div className="mb-1 flex flex-wrap items-center gap-2">
+                  <h1 className="text-base font-bold text-text-primary">{activeCatMeta?.label ?? "All terms"}</h1>
+                  <CountPill value={filtered.length} label="visible" />
+                </div>
+                <p className="line-clamp-2 text-xs leading-relaxed text-text-muted">
+                  {activeCatMeta?.description ?? "Compact UX/UI Lead reference with prompts, demos, and practical implementation language."}
+                </p>
+              </div>
               {(query || activeCategory !== "all") && (
-                <button
-                  onClick={handleClear}
-                  className="text-xs text-text-muted hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded"
-                >
+                <button type="button" onClick={handleClear} className="h-8 shrink-0 rounded-md border border-border bg-bg-surface px-2.5 text-xs font-bold text-text-secondary hover:bg-bg-soft">
                   Reset
                 </button>
               )}
             </div>
+            <div className="mt-3 lg:hidden">
+              <SearchInput value={query} onChange={setQuery} placeholder="Search playbook..." label="Search playbook mobile" />
+            </div>
           </div>
 
-          {/* Term list */}
-          <div className="flex-1 overflow-y-auto px-2 py-2">
+          <div className="min-h-0 flex-1 overflow-y-auto px-2 py-2">
             {filtered.length === 0 ? (
-              <div className="px-2 py-6">
-                <EmptyState query={query} onClear={handleClear} />
+              <div className="p-2">
+                <EmptyState
+                  title="No matching terms"
+                  description={`No terms match "${query}". Search covers titles, aliases, definitions, tags, and prompt examples.`}
+                  action={<PrimaryButton onClick={handleClear}>Clear filters</PrimaryButton>}
+                />
               </div>
             ) : (
-              <div className="space-y-0.5">
+              <div className="space-y-1">
                 {filtered.map((term) => (
                   <TermRow
                     key={term.id}
@@ -186,44 +186,28 @@ export function PlaybookClient() {
               </div>
             )}
           </div>
-        </div>
+        </section>
 
-        {/* Right detail panel */}
-        {selectedTerm ? (
-          <div className={`flex-1 min-w-0 flex flex-col overflow-hidden bg-bg-main
-            ${showMobileDetail ? "flex" : "hidden lg:flex"}
-          `}>
-            {/* Mobile back button */}
-            <div className="lg:hidden flex items-center gap-2 px-4 py-2.5 border-b border-border bg-bg-surface shrink-0">
-              <button
-                onClick={handleBackMobile}
-                className="flex items-center gap-1.5 text-sm text-text-secondary hover:text-text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg py-1 pr-2"
-              >
-                <ArrowLeft size={15} />
-                Back to list
-              </button>
-            </div>
-            <TermDetailPanel
-              term={selectedTerm}
-              isBookmarked={bookmarks.has(selectedTerm.slug)}
-              onBookmark={handleBookmark}
-            />
+        <section className={`${showMobileDetail ? "flex" : "hidden lg:flex"} min-w-0 flex-col overflow-hidden bg-bg-main`}>
+          <div className="flex h-11 shrink-0 items-center border-b border-border bg-bg-surface px-3 lg:hidden">
+            <button
+              type="button"
+              onClick={() => setShowMobileDetail(false)}
+              className="inline-flex h-8 items-center gap-1.5 rounded-md px-2 text-sm font-semibold text-text-secondary hover:bg-bg-soft"
+            >
+              <ArrowLeft size={15} />
+              Back to list
+            </button>
           </div>
-        ) : (
-          /* Empty state — desktop when nothing selected */
-          <div className="hidden lg:flex flex-1 items-center justify-center bg-bg-main">
-            <div className="text-center px-6">
-              <div className="w-14 h-14 rounded-2xl bg-primary-soft flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl select-none">📖</span>
-              </div>
-              <p className="text-sm font-semibold text-text-primary mb-1">Select a term</p>
-              <p className="text-xs text-text-muted max-w-[200px] leading-relaxed">
-                Click any term in the list to view its definition, prompts, and examples
-              </p>
+          {selectedTerm ? (
+            <TermDetailPanel term={selectedTerm} isBookmarked={bookmarks.has(selectedTerm.slug)} onBookmark={handleBookmark} />
+          ) : (
+            <div className="p-4">
+              <EmptyState title="No terms visible" description="Clear the current search or category filter to show term details." action={<PrimaryButton onClick={handleClear}>Reset</PrimaryButton>} />
             </div>
-          </div>
-        )}
+          )}
+        </section>
       </div>
-    </div>
+    </AppShell>
   );
 }

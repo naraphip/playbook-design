@@ -289,7 +289,7 @@ export const EXTRA_TERMS: UXTerm[] = [
       "เพิ่ม success state ให้ form นี้: หลัง submit ให้แสดง confirmation ชัดเจนว่า action สำเร็จ บอก next step, และ disable submit button เพื่อป้องกัน double-submit",
     ],
     tags: ["state", "feedback", "form", "ux"],
-    visualType: "cta",
+    visualType: "toastStack",
     relatedSlugs: ["error-state", "toast", "empty-state"],
   },
   {

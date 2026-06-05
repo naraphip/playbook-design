@@ -1,5 +1,6 @@
 import type { UXTerm } from "@/types/playbook";
 import { EXTRA_TERMS } from "./terms-extra";
+import { SPEC_V3_TERMS } from "./terms-v3";
 
 const BASE_TERMS: UXTerm[] = [
   // ─── UI COMPONENTS ───────────────────────────────────────────────
@@ -16,6 +17,11 @@ const BASE_TERMS: UXTerm[] = [
       "CTA คือ element ที่บอก user ว่าต้องทำอะไรต่อไป มักเป็นปุ่มที่โดดเด่นที่สุดในหน้า ออกแบบให้ดึงดูดสายตาและสื่อความหมายชัดเจน",
     whyItMatters:
       "CTA ที่ดีเพิ่ม conversion โดยตรง การมี primary CTA มากกว่า 1 จุดใน section เดียวทำให้ user สับสนและ click rate ลด",
+    whenToUse: [
+      "เมื่อ design หน้าที่ต้องการให้ user ทำ action เดียวที่ชัดเจน",
+      "ตอน review pricing page, landing page, หรือ conversion-critical screen",
+      "เมื่อ section มี CTA มากกว่า 1 จุด และต้องหา primary action ที่แท้จริง",
+    ],
     examples: [
       "ปุ่ม 'Start Free Trial' บน pricing page",
       "ปุ่ม 'Add to Cart' บน product card",
@@ -43,6 +49,11 @@ const BASE_TERMS: UXTerm[] = [
       "Navbar คือ navigation component หลักที่ประกอบด้วย logo, menu links, และ action buttons เช่น login/signup มักออกแบบให้ sticky เพื่อให้เข้าถึงได้ตลอด",
     whyItMatters:
       "Navbar ที่ดีลด time-to-navigate และป้องกัน user หลงทาง การมี active state ชัดเจนทำให้รู้ว่า section ไหนถูก select อยู่",
+    whenToUse: [
+      "เมื่อ build หรือ review navigation structure ของ website หรือ app",
+      "ตอน audit mobile navigation ว่า hamburger menu accessible และมี keyboard support",
+      "เมื่อต้องการ sticky navigation สำหรับ long-scrolling content page",
+    ],
     examples: [
       "Top navbar ของ SaaS dashboard ที่มี logo ซ้าย, menu กลาง, user avatar ขวา",
       "Sticky navbar ที่ shrink เมื่อ scroll ลง",
@@ -69,6 +80,11 @@ const BASE_TERMS: UXTerm[] = [
       "Sidebar คือ navigation panel ด้านซ้ายหรือขวาที่ใช้ใน dashboard/app Drawer คือ panel เดียวกันแต่ซ่อนอยู่และ slide เข้ามาเมื่อกดปุ่ม เหมาะกับ mobile และ secondary navigation",
     whyItMatters:
       "Sidebar เหมาะกับ app ที่มี section เยอะ เพราะเห็น structure ทั้งหมดพร้อมกัน Drawer เหมาะกับ mobile เพราะประหยัดพื้นที่",
+    whenToUse: [
+      "เมื่อ app มี navigation sections มากกว่า 4-5 items ที่ต้องแสดงพร้อมกัน",
+      "ตอน design admin dashboard ที่ต้องการ persistent navigation",
+      "เมื่อ implement mobile navigation ที่ต้องซ่อน drawer ออกไปเพื่อประหยัดพื้นที่",
+    ],
     examples: [
       "Left sidebar ของ Figma ที่แสดง layers panel",
       "Settings sidebar ที่มี categories ซ้ายและ content ขวา",
@@ -95,6 +111,11 @@ const BASE_TERMS: UXTerm[] = [
       "Modal คือ overlay component ที่แสดง content สำคัญหรือขอ confirmation โดยป้องกันการ interact กับ page ด้านหลัง ใช้สำหรับ form, confirmation dialog, image lightbox",
     whyItMatters:
       "Modal ที่ไม่มี focus trap ทำให้ keyboard user navigate หนีออกไปได้ ต้องมี ESC close, backdrop click close, และ aria-modal เสมอ",
+    whenToUse: [
+      "เมื่อต้องการ confirmation ก่อน destructive action เช่น delete หรือ cancel subscription",
+      "ตอน implement form ที่ไม่ต้องการ navigate ออกจากหน้าปัจจุบัน",
+      "เมื่อ audit accessibility ของ dialog components ว่ามี focus trap และ ESC close",
+    ],
     examples: [
       "Delete confirmation dialog ที่ถามก่อนลบ",
       "Login modal ที่ pop up แทนการ redirect",
@@ -121,6 +142,11 @@ const BASE_TERMS: UXTerm[] = [
       "Toast คือ non-intrusive notification ที่แสดง feedback หลัง user ทำ action เช่น 'Saved successfully' หรือ 'Error: Failed to upload' มักอยู่มุมบนขวาและหายไปใน 3-5 วินาที",
     whyItMatters:
       "Toast ที่ดีให้ feedback ทันทีโดยไม่ block workflow Toast ที่แย่คือ auto-dismiss เร็วเกินไปจน screen reader ไม่ทัน อ่านหรือหายไปก่อนที่ user จะเห็น",
+    whenToUse: [
+      "หลัง async action เสร็จสิ้น เช่น save, upload, delete — ต้องให้ feedback ทันที",
+      "เมื่อต้องการ feedback ที่ไม่บล็อก workflow ของ user",
+      "ตอน design error notification ที่ต้องการให้ user retry ได้จาก notification นั้นเลย",
+    ],
     examples: [
       "Toast สีเขียว 'Profile updated' หลัง save settings",
       "Toast สีแดง 'Upload failed. Try again.' พร้อม retry button",
@@ -147,6 +173,11 @@ const BASE_TERMS: UXTerm[] = [
       "Hero section คือ first impression ของเว็บ มักมี headline ที่บอก value proposition, supporting text, CTA หลัก และ visual ประกอบ Above the fold คือทุกสิ่งที่เห็นได้โดยไม่ต้อง scroll",
     whyItMatters:
       "User ตัดสิน site ใน 5 วินาทีแรก Hero ที่ดีต้องตอบคำถาม 'นี่คืออะไร ทำไมต้องสนใจ ทำอะไรได้เลย' ให้ครบ",
+    whenToUse: [
+      "เมื่อ design หรือ review landing page สำหรับ product ใหม่",
+      "ตอน audit value proposition ว่า above-the-fold content ตอบ 3 คำถามได้: What, Why, What next",
+      "เมื่อ A/B test headline หรือ CTA wording ใน hero section",
+    ],
     examples: [
       "Hero ของ SaaS ที่มี headline, product screenshot, และปุ่ม Start Free Trial",
       "Landing page hero ที่มี video background และ CTA กลางหน้า",
@@ -172,6 +203,11 @@ const BASE_TERMS: UXTerm[] = [
       "Empty state คือ UI สำหรับ scenario ที่ list/table/dashboard ว่างเปล่า ไม่ว่าจะเป็นครั้งแรก (first-time empty), หลังลบข้อมูล หรือ search ไม่เจอผล",
     whyItMatters:
       "Empty state ที่ไม่ดีทำให้ user สับสนว่าเว็บพัง หรือตัวเองทำผิดอะไร Empty state ที่ดีให้ทิศทางและ motivation ให้ทำ action ต่อ",
+    whenToUse: [
+      "เมื่อ user เข้ามาใช้ feature ครั้งแรกและยังไม่มีข้อมูล",
+      "ตอน design search results page ที่อาจไม่มี matching results",
+      "เมื่อ implement dashboard ที่ data อาจว่างหลัง apply filter หนัก",
+    ],
     examples: [
       "Inbox ว่างเปล่าพร้อม illustration และ 'No messages yet. Start a conversation.'",
       "Search results ว่างพร้อมคำแนะนำให้ลองคำค้นอื่น",
@@ -181,7 +217,7 @@ const BASE_TERMS: UXTerm[] = [
       "สร้าง EmptyState component ที่รับ icon, title, description, และ optional action button",
     ],
     tags: ["state", "ux-writing", "illustration", "onboarding"],
-    visualType: "cta",
+    visualType: "emptyState",
     relatedSlugs: ["loading-state", "error-state", "onboarding-flow"],
   },
   {
@@ -197,6 +233,11 @@ const BASE_TERMS: UXTerm[] = [
       "Loading state คือ feedback ว่าระบบกำลังทำงาน Skeleton loader แสดง placeholder ที่มีรูปร่างเหมือน content จริง ทำให้รู้สึกว่าเร็วกว่า spinner ธรรมดา",
     whyItMatters:
       "ไม่มี loading state = user คิดว่าเว็บค้าง Skeleton loading ลด perceived load time ได้มากกว่า spinner เพราะ user เห็น layout ก่อนที่ข้อมูลจะมา",
+    whenToUse: [
+      "ทุกครั้งที่มี async operation ที่ใช้เวลามากกว่า 100ms",
+      "เมื่อ implement data fetching ใน list, table, หรือ dashboard card",
+      "ตอน review UX ว่า user รู้ได้ชัดเจนไหมว่าระบบกำลังทำงานอยู่",
+    ],
     examples: [
       "Skeleton card ที่ shimmer ขณะ fetch data",
       "Progress bar บน top ของหน้าขณะ navigate",
@@ -207,7 +248,7 @@ const BASE_TERMS: UXTerm[] = [
       "เพิ่ม loading state ให้ทุก async operation โดยใช้ Suspense boundary และ skeleton fallback",
     ],
     tags: ["loading", "skeleton", "performance", "ux"],
-    visualType: "cta",
+    visualType: "skeletonLoading",
     relatedSlugs: ["empty-state", "error-state"],
   },
   {
@@ -223,6 +264,11 @@ const BASE_TERMS: UXTerm[] = [
       "Error state ครอบคลุม form validation errors, API errors, network errors, และ 404/500 pages ข้อความ error ที่ดีบอก: อะไรผิด, ทำไมผิด, และทำอะไรได้เพื่อแก้",
     whyItMatters:
       "Error message แบบ 'Something went wrong' ทำให้ user หงุดหน่ย และไม่รู้จะทำอะไร ต้องเขียน error ให้ human-readable และ actionable เสมอ",
+    whenToUse: [
+      "เมื่อ implement form validation หรือ API error handling",
+      "ตอน review error messages ทั้งหมดในระบบว่า actionable และ human-readable",
+      "เมื่อ design 404/500 page ที่ต้องการให้ user กลับสู่ flow ได้",
+    ],
     examples: [
       "Form field ที่ border เปลี่ยนสีแดงและแสดง 'Email address is invalid'",
       "Full page error 404 ที่มีปุ่ม Go Home",
@@ -233,7 +279,7 @@ const BASE_TERMS: UXTerm[] = [
       "สร้าง ErrorBoundary component ที่ catch React errors และแสดง fallback UI ที่ friendly พร้อม retry",
     ],
     tags: ["error", "validation", "ux-writing", "feedback"],
-    visualType: "cta",
+    visualType: "formFieldStates",
     relatedSlugs: ["empty-state", "toast", "loading-state"],
   },
   {
@@ -249,6 +295,11 @@ const BASE_TERMS: UXTerm[] = [
       "Card เป็น versatile component ที่ใช้แสดงข้อมูลเป็น unit-based layout เช่น product cards, profile cards, article cards Card grid ทำให้ scan content ได้เร็วกว่า list",
     whyItMatters:
       "Card layout เหมาะกับ content ที่ parallel กัน เช่น product listing แต่ถ้า card มีข้อมูลต่างกันมาก อาจใช้ table แทน",
+    whenToUse: [
+      "เมื่อแสดง collection ของ content ที่มีโครงสร้าง parallel กัน เช่น products, articles, users",
+      "ตอน design listing page ที่ต้องการให้ scan ได้เร็วผ่าน visual thumbnail",
+      "เมื่อพิจารณาว่าควรใช้ card หรือ table สำหรับ data set นั้น",
+    ],
     examples: [
       "Product card ที่มี image, name, price, และ Add to Cart",
       "Blog article card ที่มี thumbnail, title, excerpt, และ date",
@@ -259,7 +310,7 @@ const BASE_TERMS: UXTerm[] = [
       "ออกแบบ card grid ที่ responsive: 1 column mobile, 2 column tablet, 3 column desktop โดยใช้ CSS Grid และ gap ที่สม่ำเสมอ",
     ],
     tags: ["layout", "grid", "component", "content"],
-    visualType: "cta",
+    visualType: "cardLayout",
     relatedSlugs: ["table", "filter-bar"],
   },
   {
@@ -275,6 +326,11 @@ const BASE_TERMS: UXTerm[] = [
       "Table เหมาะกับข้อมูลที่ต้องเปรียบเทียบหลาย column Data Grid คือ advanced table ที่รองรับ inline editing, virtual scroll สำหรับข้อมูลจำนวนมาก และ column resize",
     whyItMatters:
       "Table ที่ดีต้องรองรับ keyboard navigation ด้วย arrow keys, ต้องมี caption สำหรับ screen reader, และต้อง responsive บน mobile",
+    whenToUse: [
+      "เมื่อ data มีหลาย attribute ที่ต้องเปรียบเทียบกันใน row เดียวกัน",
+      "ตอน design admin panel ที่ต้องการ sort, filter, และ bulk action",
+      "เมื่อ implement data grid ที่ต้องรองรับ keyboard navigation และ ARIA table roles",
+    ],
     examples: [
       "User management table ที่ sort by column ได้",
       "Transaction history table พร้อม date filter",
@@ -285,7 +341,7 @@ const BASE_TERMS: UXTerm[] = [
       "ทำ responsive table บน mobile โดย stack column เป็น key-value pairs แทนการ scroll horizontal",
     ],
     tags: ["data", "table", "sorting", "pagination"],
-    visualType: "grid",
+    visualType: "dataTable",
     relatedSlugs: ["pagination", "filter-bar", "card"],
   },
   {
@@ -301,6 +357,11 @@ const BASE_TERMS: UXTerm[] = [
       "Form field ประกอบด้วย label (ต้องมีเสมอ), input element, optional placeholder, helper text, และ validation error ทุก input ต้องมี associated label ที่ accessible",
     whyItMatters:
       "Form UX ที่แย่คือ label อยู่ข้างในช่อง (placeholder ไม่ใช่ label), error ไม่บอกวิธีแก้, และ tab order ผิด ทำให้ form completion rate ต่ำ",
+    whenToUse: [
+      "ทุกครั้งที่ design หรือ implement form สำหรับ user input",
+      "ตอน audit form accessibility ว่า label, error message, และ tab order ถูกต้อง",
+      "เมื่อ review checkout หรือ signup form ว่า friction น้อยที่สุด",
+    ],
     examples: [
       "Email input ที่มี label 'Email address' และ error 'Please enter a valid email'",
       "Password field ที่มี show/hide toggle",
@@ -311,7 +372,7 @@ const BASE_TERMS: UXTerm[] = [
       "สร้าง FormField component ที่รับ label, type, placeholder, helperText, error, required และ forward ref",
     ],
     tags: ["form", "input", "validation", "accessibility"],
-    visualType: "cta",
+    visualType: "formFieldStates",
     relatedSlugs: ["error-state", "keyboard-navigation", "wcag"],
   },
   {
@@ -327,6 +388,11 @@ const BASE_TERMS: UXTerm[] = [
       "Tooltip แสดงข้อความสั้นเมื่อ hover/focus เพื่ออธิบาย icon หรือ action Popover เปิดเมื่อ click และสามารถมี interactive content เช่น dropdown menu หรือ mini form",
     whyItMatters:
       "Tooltip ต้องทำงานบน keyboard (focus trigger) ไม่ใช่แค่ hover เพราะ mobile user ไม่มี hover state และ keyboard user ต้องการ feedback",
+    whenToUse: [
+      "เมื่อ icon button ต้องการ label ที่ชัดเจนขึ้นสำหรับ context",
+      "ตอน implement additional info ที่ไม่ควรแสดงตลอดเวลาเพื่อลด clutter",
+      "เมื่อ audit tooltip ว่า keyboard accessible ไหม (focus trigger ไม่ใช่แค่ hover)",
+    ],
     examples: [
       "Tooltip บน icon button ที่บอกว่า 'Delete item'",
       "Popover สำหรับ user profile dropdown",
@@ -335,7 +401,7 @@ const BASE_TERMS: UXTerm[] = [
       "สร้าง Tooltip component ที่ trigger บน focus และ hover, accessible ด้วย role='tooltip' และ aria-describedby",
     ],
     tags: ["tooltip", "popover", "accessibility", "hover"],
-    visualType: "cta",
+    visualType: "componentVariants",
     relatedSlugs: ["modal", "form-field"],
   },
   {
@@ -351,6 +417,11 @@ const BASE_TERMS: UXTerm[] = [
       "Pagination แบ่งเป็น 2 แบบหลัก: page-based (มีหมายเลขหน้า) และ infinite scroll / load more (load เพิ่มเมื่อ scroll ถึงล่าง) แต่ละแบบเหมาะกับ use case ต่างกัน",
     whyItMatters:
       "Page-based เหมาะกับ content ที่ต้องกลับมาหา (เช่น search results) Infinite scroll เหมาะกับ feed แต่ทำให้ footer ไม่ accessible และ back button ใช้งานยาก",
+    whenToUse: [
+      "เมื่อ list หรือ table มีข้อมูลมากกว่า 20-50 items",
+      "ตอน design search results ที่ user ต้องกลับมา page ที่ดูค้างไว้ได้",
+      "เมื่อ compare ว่าควรใช้ page-based pagination หรือ infinite scroll สำหรับ use case นั้น",
+    ],
     examples: [
       "Search results พร้อม numbered pagination",
       "Social media feed แบบ infinite scroll",
@@ -360,7 +431,7 @@ const BASE_TERMS: UXTerm[] = [
       "เพิ่ม accessible pagination ที่มี aria-label='Pagination', current page highlighted พร้อม aria-current='page', และ keyboard navigation",
     ],
     tags: ["pagination", "list", "data", "navigation"],
-    visualType: "cta",
+    visualType: "dataTable",
     relatedSlugs: ["table", "filter-bar"],
   },
 
@@ -378,6 +449,11 @@ const BASE_TERMS: UXTerm[] = [
       "Cozy style ใช้ whitespace เยอะ, font size ที่อ่านสบาย, สีโทนอบอุ่น, border radius ใหญ่ และ illustration style แบบ friendly เหมาะกับ consumer app, blog, journaling app",
     whyItMatters:
       "Cozy style สร้าง emotional safety ให้ user รู้สึกสบายใจในการ interact ตรงกันข้ามกับ enterprise UI ที่เน้น efficiency",
+    whenToUse: [
+      "เมื่อ brief designer สำหรับ consumer app ที่ต้องการ emotional warmth และ invitation",
+      "ตอน review UI tone ว่า visual style ตรงกับ brand personality ไหม",
+      "เมื่อ design wellness, journaling, lifestyle, หรือ personal productivity app",
+    ],
     examples: [
       "Notion-style editor ที่มีพื้นที่ breathing เยอะ",
       "Recipe app ที่ใช้ warm beige และ round fonts",
@@ -404,6 +480,11 @@ const BASE_TERMS: UXTerm[] = [
       "Compact UI ลด padding, ใช้ font ขนาดเล็ก, และ pack ข้อมูลให้มากที่สุดในพื้นที่เดียว เหมาะกับ power users ที่ต้องการเห็นข้อมูลเยอะพร้อมกัน",
     whyItMatters:
       "Power user เช่น trader, analyst, developer ต้องการ data density สูง ถ้าทำ UI แบบ consumer app จะรู้สึกว่าเสียเวลา scroll",
+    whenToUse: [
+      "เมื่อ design dashboard, admin panel, dev tool, หรือ data-heavy B2B app",
+      "ตอน review UI ว่า power user ต้องการ data density สูงกว่าที่แสดงอยู่ไหม",
+      "เมื่อ implement density setting ให้ user เลือกระหว่าง comfortable และ compact",
+    ],
     examples: [
       "Bloomberg terminal ที่มีข้อมูลเยอะมากในหน้าเดียว",
       "VS Code editor ที่ compact มาก",
@@ -430,6 +511,11 @@ const BASE_TERMS: UXTerm[] = [
       "Dark mode ไม่ใช่แค่เปลี่ยนสีดำขาว ต้องคำนึงถึง contrast ratio ของทุก element, elevation system (ใน dark mode ใช้ lighter surface แทน shadow), และ color saturation",
     whyItMatters:
       "ปัญหาที่พบบ่อยคือ dark mode ที่มีแค่ background ดำแต่ contrast ต่ำ และ image ที่ไม่ได้ปรับจะดู glaring มากบน dark background",
+    whenToUse: [
+      "เมื่อ implement theme system สำหรับ app ที่ต้องรองรับ user preference",
+      "ตอน review dark mode ว่า contrast ratio ผ่าน WCAG AA ทั้งสอง mode",
+      "เมื่อ design developer tool, code editor, หรือ media consumption app",
+    ],
     examples: [
       "GitHub dark mode ที่ใช้ layered dark surfaces แทน shadow",
       "VS Code dark theme ที่มี syntax highlighting ชัดเจน",
@@ -455,6 +541,11 @@ const BASE_TERMS: UXTerm[] = [
       "Glassmorphism ใช้ background: rgba() + backdrop-filter: blur() + border ใส สร้าง panel ที่ดูเหมือนกระจกฝ้าอยู่บน gradient background เป็นที่นิยมใน hero section และ card overlay",
     whyItMatters:
       "Glassmorphism ดูดีบน gradient background แต่ performance cost สูงกว่า solid background และต้องระวัง contrast ของ text บน glass panel",
+    whenToUse: [
+      "เมื่อต้องการ premium visual effect บน hero section หรือ landing page ที่มี gradient background",
+      "ตอน evaluate ว่า glassmorphism เหมาะกับ brand tone หรือ overpower content",
+      "เมื่อต้อง audit contrast ของ text บน glass panel ก่อน ship ทุกครั้ง",
+    ],
     examples: [
       "macOS Big Sur widget ที่ใช้ frosted glass",
       "App card ที่ float บน gradient background",
@@ -463,7 +554,7 @@ const BASE_TERMS: UXTerm[] = [
       "ใช้ glassmorphism effect บน hero card โดย backdrop-filter: blur(12px), background: rgba(255,255,255,0.05), border: 1px solid rgba(255,255,255,0.1) และ check contrast ของ text",
     ],
     tags: ["glass", "blur", "css", "visual-effect"],
-    visualType: "styles",
+    visualType: "glassPanel",
     relatedSlugs: ["dark-mode", "hero-section"],
   },
   {
@@ -479,6 +570,11 @@ const BASE_TERMS: UXTerm[] = [
       "Minimalism ไม่ใช่แค่ 'UI ว่าง' แต่คือการ prioritize อย่างระมัดระวัง ทุก element ที่อยู่บนหน้าจอต้องตอบโจทย์ function ที่ชัดเจน ลด cognitive load และทำให้ focus ไปที่ content",
     whyItMatters:
       "Minimalism ที่ทำผิดคือ sparse แต่ confusing ต้องแยกแยะระหว่าง minimal ที่ purposeful กับ minimal ที่ขาดข้อมูลสำคัญ",
+    whenToUse: [
+      "เมื่อ UI ดู cluttered และต้องการ simplification โดยไม่ลบ content สำคัญ",
+      "ตอน brief designer ให้ลด visual noise ในขณะที่ยังคง function ครบถ้วน",
+      "เมื่อ audit ว่าทุก element บนหน้าจอมี clear purpose ที่ justify การมีอยู่",
+    ],
     examples: [
       "Apple website ที่ใช้ whitespace เยอะแต่ hierarchy ชัดมาก",
       "Google search ที่มีแค่ search box",
@@ -487,7 +583,7 @@ const BASE_TERMS: UXTerm[] = [
       "Review หน้านี้แบบ minimalism audit: ระบุทุก element ที่ไม่มี clear purpose และ propose ว่าควร remove หรือ consolidate อะไรบ้าง",
     ],
     tags: ["minimalism", "whitespace", "focus", "clean"],
-    visualType: "styles",
+    visualType: "beforeAfterNoiseReduction",
     relatedSlugs: ["cozy-style", "visual-hierarchy"],
   },
 
@@ -505,6 +601,11 @@ const BASE_TERMS: UXTerm[] = [
       "Responsive design ใช้ fluid grid, flexible images, และ CSS media queries ทำให้ layout ปรับ breakpoint ตาม viewport width ต่างจาก adaptive design ที่ serve หน้าแยกตาม device",
     whyItMatters:
       "กว่า 60% ของ web traffic มาจาก mobile ถ้า mobile experience แย่ user จะ bounce และ Google ก็ rank ต่ำกว่า desktop-only site",
+    whenToUse: [
+      "เมื่อ implement layout ใหม่ที่ต้องรองรับ mobile, tablet, และ desktop",
+      "ตอน audit responsiveness ที่ specific breakpoints ก่อน ship feature",
+      "เมื่อพบ horizontal scroll หรือ content overflow บน mobile viewport",
+    ],
     examples: [
       "Card grid ที่เป็น 3 column บน desktop, 2 column บน tablet, 1 column บน mobile",
       "Sidebar ที่ซ่อนและกลายเป็น drawer บน mobile",
@@ -530,6 +631,11 @@ const BASE_TERMS: UXTerm[] = [
       "Mobile-first approach เริ่มจาก constraints ที่แคบที่สุดก่อน ทำให้ต้องตัดสิน priority ของ content อย่างระมัดระวัง ผลคือ experience ที่ focused กว่าบน desktop ด้วย",
     whyItMatters:
       "ถ้า design desktop ก่อนแล้วย่อลง mobile มักจะ hide ของเยอะหรือ layout แตก Mobile-first บังคับให้ตัดสินใจ priority ก่อน",
+    whenToUse: [
+      "ก่อน start coding layout ใหม่เพื่อ ensure mobile constraints ถูก prioritize ก่อน",
+      "เมื่อ refactor existing desktop layout ให้รองรับ mobile อย่างถูกวิธี",
+      "ตอน design content priority สำหรับ navigation และ key UI elements",
+    ],
     examples: [
       "CSS ที่เริ่มจาก base style สำหรับ mobile แล้วใช้ min-width breakpoint ขยาย",
       "Navigation ที่เริ่มจาก hamburger menu แล้ว enhance เป็น horizontal nav บน desktop",
@@ -554,6 +660,11 @@ const BASE_TERMS: UXTerm[] = [
       "User flow map ทุก decision point, action, และ screen ที่ user ต้องผ่าน Task flow เน้นที่ single task โดย abstract ออกจาก specific UI User flow เห็น happy path และ edge cases ครบ",
     whyItMatters:
       "การ design UI โดยไม่มี user flow ก่อนมักทำให้ miss edge cases และ create dead ends User flow บังคับให้คิดถึง error states และ back navigation",
+    whenToUse: [
+      "ก่อน design หน้าใดๆ เพื่อ map user journey และ identify edge cases ล่วงหน้า",
+      "เมื่อ review feature ใหม่ว่า flow ครบถ้วน ไม่มี dead end หรือ missing state",
+      "ตอน handoff กับ developer เพื่อให้ทั้งทีมเข้าใจ context ของแต่ละ screen",
+    ],
     examples: [
       "Signup flow: Landing → Register Form → Email Verify → Onboarding → Dashboard",
       "Checkout flow: Cart → Shipping → Payment → Confirmation",
@@ -579,6 +690,11 @@ const BASE_TERMS: UXTerm[] = [
       "Wireframe คือ low-fidelity layout ที่ไม่มีสีหรือ font จริง Mockup คือ high-fidelity design ที่มีสีและ typography จริง Prototype คือ clickable version ที่ simulate interaction",
     whyItMatters:
       "ใช้ให้ถูก fidelity กับ stage ที่ถูก Wireframe สำหรับ structure review, Mockup สำหรับ visual review, Prototype สำหรับ usability testing",
+    whenToUse: [
+      "ในระยะเริ่มต้นของ design process เพื่อ validate structure ก่อน commit visual",
+      "ตอน pitch ความคิดกับ stakeholder โดยไม่ให้ attention ไปที่ color หรือ font",
+      "เมื่อ plan complex page ที่มีหลาย section และ interactive component",
+    ],
     examples: [
       "Balsamiq wireframe เพื่อ layout approval ก่อน design",
       "Figma mockup สำหรับ stakeholder review",
@@ -604,6 +720,11 @@ const BASE_TERMS: UXTerm[] = [
       "IA ครอบคลุม navigation structure, labeling, search, và taxonomy IA ที่ดีทำให้ user ค้นหาข้อมูลได้โดย intuitive โดยไม่ต้องอ่าน manual",
     whyItMatters:
       "IA ที่แย่ทำให้ user navigate แบบ trial-and-error ไม่รู้ว่า feature อยู่ที่ไหน ต้องทำ card sorting และ tree testing เพื่อ validate",
+    whenToUse: [
+      "เมื่อ design navigation structure ของ website หรือ app ใหม่",
+      "ตอน audit ว่า user หา feature ได้โดย intuitive หรือต้องลองหลายที่",
+      "เมื่อ app โตขึ้นและ navigation เริ่มซับซ้อนจนต้องจัด structure ใหม่",
+    ],
     examples: [
       "Website navigation ที่จัดหมวดหมู่ product ตามที่ user think ไม่ใช่ตาม internal team structure",
     ],
@@ -627,6 +748,11 @@ const BASE_TERMS: UXTerm[] = [
       "Cognitive load แบ่งเป็น intrinsic (ความซับซ้อนของ task), extraneous (ความซับซ้อนจาก UI ที่แย่), และ germane (การเรียนรู้ที่เกิดขึ้น) เป้าหมายคือลด extraneous load",
     whyItMatters:
       "UI ที่มี cognitive load สูงทำให้ user ทำผิด, ช้า, หรือ abandon task ลด cognitive load ด้วย progressive disclosure, chunking และ clear hierarchy",
+    whenToUse: [
+      "เมื่อ review UI ที่ user รู้สึก overwhelmed หรือทำ error บ่อยผิดปกติ",
+      "ตอน design form หรือ wizard ที่ซับซ้อนเพื่อ break เป็น manageable steps",
+      "เมื่อ audit dashboard ว่าแสดง metric มากเกินกว่าที่ user ต้องการจริงๆ",
+    ],
     examples: [
       "Form ที่แยกเป็น multi-step แทน single long form ลด cognitive load",
       "Dashboard ที่ highlight KPI สำคัญแทนแสดงทุก metric",
@@ -651,6 +777,11 @@ const BASE_TERMS: UXTerm[] = [
       "Progressive disclosure ลด initial complexity โดยแสดงแค่ essential options ก่อน และซ่อน advanced settings ไว้หลัง expandable section, tooltip, หรือ secondary screen",
     whyItMatters:
       "การแสดงทุก option พร้อมกันทำให้ new user ท้อและ power user frustrated ที่ต้องผ่าน basic options Progressive disclosure serve ทั้งคู่",
+    whenToUse: [
+      "เมื่อ settings page มี option เยอะแต่ส่วนใหญ่ไม่ใช่สิ่งที่ทุกคนต้องการ",
+      "ตอน design form ที่มีทั้ง basic fields และ optional advanced configuration",
+      "เมื่อ onboarding ต้องการแนะนำ feature ทีละขั้นตอนโดยไม่ overwhelming",
+    ],
     examples: [
       "'Show advanced settings' accordion ใน form",
       "Simple search ที่มี 'Advanced search' link",
@@ -676,6 +807,11 @@ const BASE_TERMS: UXTerm[] = [
       "Visual hierarchy ชี้นำสายตา user ให้ process information ตามลำดับที่ต้องการ ใช้ contrast, scale, color, whitespace และ positioning เพื่อแสดงว่า element ไหนสำคัญกว่า",
     whyItMatters:
       "หน้าที่ไม่มี hierarchy ทำให้ user สแกนไม่ออกว่า action หลักคืออะไร ทุกอย่างดูสำคัญเท่ากันหมด = ไม่มีอะไรสำคัญเลย",
+    whenToUse: [
+      "เมื่อ review page ว่า user scan ได้ชัดเจนว่า action หลักคืออะไร",
+      "ตอน audit typography และ color ว่า hierarchy สื่อ importance ได้ถูกต้อง",
+      "เมื่อ redesign page ที่ทุกอย่างดูสำคัญเท่ากันหมดจน action หลักหาย",
+    ],
     examples: [
       "Headline H1 ใหญ่, H2 เล็กกว่า, body text เล็กสุด",
       "Primary button เด่นกว่า secondary button",
@@ -685,7 +821,7 @@ const BASE_TERMS: UXTerm[] = [
       "Audit visual hierarchy ของหน้านี้: element ไหนสำคัญที่สุด? สายตา user ไปที่ไหนก่อน? CTA เด่นพอไหม? แก้ให้ hierarchy ชัดขึ้น",
     ],
     tags: ["hierarchy", "typography", "layout", "design"],
-    visualType: "flow",
+    visualType: "hierarchyComparison",
     relatedSlugs: ["cognitive-load", "cta", "minimalism"],
   },
   {
@@ -701,6 +837,11 @@ const BASE_TERMS: UXTerm[] = [
       "Onboarding flow ออกแบบเพื่อลด time-to-value — เวลาที่ user ใช้จนได้รับ value แรกจาก product อาจเป็น welcome screen, setup wizard, progress checklist หรือ empty state ที่ guide",
     whyItMatters:
       "Onboarding ที่แย่ทำให้ user ไม่เข้าใจว่า product ทำอะไรได้ ออกไปก่อนที่จะเห็น value ส่งผลต่อ activation rate โดยตรง",
+    whenToUse: [
+      "เมื่อ design ประสบการณ์ first-time user ของ product หรือ feature ใหม่",
+      "ตอน review activation rate ต่ำและต้องหา drop-off point ใน flow",
+      "เมื่อ launch major feature update ที่ต้องการ guide existing user",
+    ],
     examples: [
       "Slack ที่ guide user ให้ invite team member และส่ง first message",
       "Profile completion checklist ที่แสดง progress",
@@ -727,6 +868,11 @@ const BASE_TERMS: UXTerm[] = [
       "CSS box model กำหนดพื้นที่ของทุก element: content area, padding (ระยะห่างภายใน), border, และ margin (ระยะห่างภายนอก) box-sizing: border-box ทำให้ padding ไม่บวกเพิ่ม width",
     whyItMatters:
       "ความเข้าใจผิดระหว่าง padding กับ margin ทำให้ layout แปลกๆ margin collapse ใน vertical สร้าง spacing ที่ไม่คาดคิด ต้องใช้ box-sizing: border-box เสมอ",
+    whenToUse: [
+      "เมื่อ debug spacing ที่แปลกหรือ layout ไม่ได้ขนาดตามที่คาดไว้",
+      "ตอน review CSS ว่าใช้ padding กับ margin ถูก context และ composable",
+      "เมื่อ explain spacing system กับ designer หรือ developer ใหม่",
+    ],
     examples: [
       "padding: 16px เพิ่มพื้นที่ภายใน card",
       "margin: auto ทำให้ block element อยู่กลางหน้า",
@@ -753,6 +899,11 @@ const BASE_TERMS: UXTerm[] = [
       "Flexbox (CSS Flexible Box) ช่วยจัด element ใน container ตาม main axis (row/column) และ cross axis โดย properties หลักคือ display: flex, justify-content, align-items, flex-wrap, gap",
     whyItMatters:
       "Flexbox เหมาะกับ navbar, button groups, form rows — layout 1 dimension Grid เหมาะกับ 2 dimension เช่น card grid ถ้าใช้ผิดก็ทำให้โค้ดซับซ้อนโดยไม่จำเป็น",
+    whenToUse: [
+      "เมื่อ layout element ใน 1 direction (row หรือ column) เช่น navbar, button group",
+      "ตอน center content, distribute items, หรือ build card header แบบ space-between",
+      "เมื่อ debug alignment ที่ไม่ตรงกับ design spec",
+    ],
     examples: [
       "Navbar ที่ใช้ flex justify-content: space-between",
       "Button group ที่ใช้ flex gap-2",
@@ -778,6 +929,11 @@ const BASE_TERMS: UXTerm[] = [
       "CSS Grid ใช้ display: grid และกำหนด rows/columns ด้วย grid-template-columns/rows Items วางตามได้โดย auto-placement หรือกำหนด grid-column/row เองได้",
     whyItMatters:
       "Grid ทำ complex layout ที่ flexbox ทำยาก เช่น masonry, asymmetric layout และ named grid areas ทำให้ layout อ่านง่ายมาก",
+    whenToUse: [
+      "เมื่อ layout ต้องการ 2 dimensions เช่น card grid, page layout, หรือ dashboard",
+      "ตอน implement responsive card grid โดยไม่ต้องเขียนหลาย media query",
+      "เมื่อ design complex layout ที่ item ต้องคลุมหลาย column/row",
+    ],
     examples: [
       "Card grid: grid-template-columns: repeat(auto-fill, minmax(280px, 1fr))",
       "Dashboard layout ที่มี sidebar + main + aside",
@@ -803,6 +959,11 @@ const BASE_TERMS: UXTerm[] = [
       "Breakpoints ใช้ใน CSS media queries เพื่อปรับ layout ตาม viewport ขนาด Standard breakpoints ของ Tailwind: sm(640px), md(768px), lg(1024px), xl(1280px), 2xl(1536px)",
     whyItMatters:
       "breakpoint ที่ดีมาจากที่ content 'แตก' ไม่ใช่ตาม device size หนึ่งๆ ควรทดสอบที่ breakpoint หลักเสมอและดู layout shift ที่เกิดขึ้น",
+    whenToUse: [
+      "เมื่อ define responsive strategy ก่อน start coding layout ใหม่",
+      "ตอน audit ว่า layout break ที่ viewport size ใดและต้องแก้ที่ breakpoint ไหน",
+      "เมื่อ align ความเข้าใจ responsive system ระหว่าง designer และ developer",
+    ],
     examples: [
       "Sidebar ที่ hidden ใต้ md: md:block",
       "Grid columns ที่เปลี่ยนจาก 1 เป็น 2 เป็น 3",
@@ -827,6 +988,11 @@ const BASE_TERMS: UXTerm[] = [
       "CSS Custom Properties ให้เก็บ value ซ้ำๆ เช่น colors, spacing, font sizes ไว้ใน :root แล้วใช้ var(--token) ทั่วไป เปลี่ยนแค่จุดเดียวแล้ว update ทุกที่ รองรับ JavaScript ด้วย",
     whyItMatters:
       "ถ้าไม่ใช้ CSS variables แล้วอยาก rebrand ต้อง find-replace ทั้ง codebase CSS variables ทำให้ theme switching (dark/light) เป็นเรื่องง่าย",
+    whenToUse: [
+      "เมื่อ implement design token system สำหรับ color, spacing, และ typography",
+      "ตอน build dark mode หรือ multi-theme support",
+      "เมื่อ refactor hardcoded values ในโค้ดให้เป็น centralized variable แทน",
+    ],
     examples: [
       "--color-primary: #8b5cf6; ใช้ใน button, link, highlight",
       "--spacing-md: 16px; ใช้เป็น standard spacing unit",
@@ -851,6 +1017,11 @@ const BASE_TERMS: UXTerm[] = [
       "z-index กำหนดลำดับการซ้อนของ positioned elements (relative/absolute/fixed/sticky) Element ที่มี z-index สูงกว่าจะอยู่บน Best practice คือ define z-index scale เช่น 10/20/30/modal/toast",
     whyItMatters:
       "z-index ที่ไม่มี system ทำให้ modal ถูก navbar บัง, tooltip ซ่อนอยู่ใต้ card การมี defined scale ป้องกัน z-index wars ที่ทุกคน set ค่าสูงขึ้นเรื่อยๆ",
+    whenToUse: [
+      "เมื่อ debug element ที่ซ้อนทับกันผิดลำดับ หรือ modal ซ่อนอยู่หลัง navbar",
+      "ตอน implement modal, dropdown, tooltip, sticky header, หรือ overlay",
+      "เมื่อ establish z-index scale rules สำหรับ codebase เพื่อป้องกัน z-index war",
+    ],
     examples: [
       "Sticky header z-index: 100, Dropdown: 200, Modal backdrop: 300, Modal: 400, Toast: 500",
     ],
@@ -876,6 +1047,11 @@ const BASE_TERMS: UXTerm[] = [
       "Design system ประกอบด้วย: design tokens (color, spacing, typography), component library (Button, Input, Modal, etc.), pattern library (form patterns, navigation patterns), และ documentation",
     whyItMatters:
       "ไม่มี design system = ทุกคนออกแบบ button ใหม่ทุกครั้ง ทำให้ visual inconsistency และ development ช้า ใช้เวลา setup แต่ประหยัดเวลา long-term มหาศาล",
+    whenToUse: [
+      "เมื่อ start project ใหม่และต้องการ consistent foundation สำหรับทีม",
+      "ตอน audit ว่า components ในโปรเจกต์ consistent กันแค่ไหน",
+      "เมื่อ onboard designer หรือ developer ใหม่ให้เข้าใจ system ที่ใช้อยู่",
+    ],
     examples: [
       "Material Design, Carbon Design System, Atlassian Design System",
       "Company internal design system ที่มี Figma library + code components",
@@ -901,6 +1077,11 @@ const BASE_TERMS: UXTerm[] = [
       "Design token คือ named values ที่เป็น single source of truth ระหว่าง designer (Figma) และ developer (CSS/TypeScript) แบ่งเป็น primitive tokens (สี hex) และ semantic tokens (color-background-button-primary)",
     whyItMatters:
       "ถ้าเปลี่ยนสี brand ต้องการแก้แค่ token เดียวแล้ว update ทุกที่ Design token ลด disconnect ระหว่าง Figma กับ code และทำให้ rebrand ง่ายขึ้นมาก",
+    whenToUse: [
+      "เมื่อ implement หรือ audit color, spacing, typography system ในโค้ด",
+      "ตอน build dark mode หรือ theming layer",
+      "เมื่อ sync design decisions ระหว่าง Figma variables และ CSS custom properties",
+    ],
     examples: [
       "--color-brand-primary: #8b5cf6",
       "--spacing-component-gap: 16px",
@@ -926,6 +1107,11 @@ const BASE_TERMS: UXTerm[] = [
       "Design handoff ที่ดีมี: component spec ที่ชัด, interaction notes, responsive rules, edge cases, state documentation, และ acceptance criteria ที่ developer ใช้ตรวจงานได้",
     whyItMatters:
       "Handoff ที่แย่ทำให้ developer ต้องเดา implement ผิด และต้องทำซ้ำหลายรอบ Handoff ที่ดีช่วยประหยัดเวลา review cycle มากที่สุด",
+    whenToUse: [
+      "เมื่อ design เสร็จและต้องส่งต่อให้ developer implement อย่างถูกต้อง",
+      "ตอน write acceptance criteria หรือ spec สำหรับ UI feature",
+      "เมื่อ review implementation ว่าตรง design spec หรือ drift แค่ไหน",
+    ],
     examples: [
       "Figma spec ที่มี annotation บอก state, breakpoint, spacing ครบ",
       "Acceptance criteria เขียนว่า 'Button แสดง loading spinner เมื่อ click และ disable ระหว่าง request'",
@@ -951,6 +1137,11 @@ const BASE_TERMS: UXTerm[] = [
       "UX metrics แบ่งเป็น behavioral (task completion, time on task, error rate, click heatmap) และ attitudinal (NPS, CSAT, SUS score) ควรใช้ทั้งสองแบบเพื่อเห็นภาพครบ",
     whyItMatters:
       "ไม่มี metrics = ไม่รู้ว่า UX improvement จริงหรือแค่ assumption Design decision ที่มี data support เชื่อถือได้กว่าและ pitch stakeholder ง่ายกว่ามาก",
+    whenToUse: [
+      "เมื่อ measure ผลลัพธ์หลัง ship feature ใหม่",
+      "ตอน set success criteria ก่อน start UX improvement initiative",
+      "เมื่อ present business impact ของ design decision ต่อ stakeholder",
+    ],
     examples: [
       "Task completion rate ของ checkout flow: 72% → target 85%",
       "SUS score หลัง redesign: 68 → 82",
@@ -976,6 +1167,11 @@ const BASE_TERMS: UXTerm[] = [
       "Design critique ที่ดีใช้ structure: Context (อะไร, ทำไม), Goals (เป้าหมายของ design), Observations (สิ่งที่เห็น), Questions (คำถามเพื่อ clarify), Suggestions (ข้อเสนอ) ไม่ใช่แค่ 'ชอบ/ไม่ชอบ'",
     whyItMatters:
       "Critique ที่ไม่มีโครงสร้างมักกลายเป็น personal opinion battle ทำให้ designer defend แทน improve โครงสร้างที่ดีทำให้ feedback actionable",
+    whenToUse: [
+      "ตอน review design ก่อน handoff ไปให้ developer implement",
+      "เมื่อต้องการ structured feedback จากทีมที่ไม่ใช่แค่ 'ชอบ/ไม่ชอบ'",
+      "ก่อน usability test เพื่อ catch obvious issues โดยไม่เสีย user testing budget",
+    ],
     examples: [
       "Presentation: Context → Goals → Demo → Structured Q&A",
       "Async feedback comment ที่เชื่อมกับ specific design goal",
@@ -1002,6 +1198,11 @@ const BASE_TERMS: UXTerm[] = [
       "Isometric illustration ใช้ 3 axes ที่เท่ากัน 120° ทำให้ object มี depth แต่ proportions ไม่บิดเบือน นิยมใช้ใน hero image, feature illustration, SaaS landing page เพราะดูทันสมัยและ tech-savvy",
     whyItMatters:
       "Isometric style บอก brand positioning แบบ tech/SaaS ได้ดี เหมาะกับ AI, developer tool, fintech AI tools เช่น Midjourney สร้าง isometric ได้ดีเมื่อ prompt ถูก",
+    whenToUse: [
+      "เมื่อต้องการ visual สำหรับ hero section, feature page, หรือ empty state",
+      "ตอน prompt AI image tool ให้ generate illustration ที่ consistent กัน",
+      "เมื่อ brief illustrator ให้ทำ brand visual ในสไตล์ที่ consistent",
+    ],
     examples: [
       "isometric illustration of a developer workspace with floating code blocks",
       "isometric 3D city with technology buildings",
@@ -1027,6 +1228,11 @@ const BASE_TERMS: UXTerm[] = [
       "Prompt formula ที่ได้ผลดี: [Subject description] + [Art style] + [Mood/Atmosphere] + [Color palette] + [Technical specs: aspect ratio, quality flags] + [Negative prompt ถ้าจำเป็น]",
     whyItMatters:
       "Prompt ที่ดีลด iteration เยอะมาก การเพิ่ม technical specs เช่น 'no text, no watermark, sharp details' ป้องกัน output ที่ unusable",
+    whenToUse: [
+      "ก่อน prompt AI image tool ทุกครั้งเพื่อให้ output ออกมาตรง concept",
+      "เมื่อ build reusable prompt template สำหรับทีมใช้ร่วมกัน",
+      "ตอน iterate prompt ให้ได้ output ที่ consistent กับ brand style",
+    ],
     examples: [
       "[flat vector illustration] + [SaaS onboarding scene] + [friendly, professional] + [blue and white] + [no text, no watermark, 16:9]",
     ],
@@ -1051,6 +1257,11 @@ const BASE_TERMS: UXTerm[] = [
       "Negative prompt ใช้ใน Stable Diffusion, Midjourney (--no flag), DALL-E เพื่อบอกว่าห้ามมี element ใดในภาพ เช่น no text, no watermark, no extra limbs, no blurry",
     whyItMatters:
       "AI มักใส่ text หรือ watermark โดย default การใส่ negative prompt ลด revision ได้มาก โดยเฉพาะสำหรับ marketing material ที่ต้องการ clean image",
+    whenToUse: [
+      "เมื่อ AI image output มี element ที่ไม่ต้องการ เช่น watermark, extra limbs, wrong style",
+      "ตอน build reusable prompt template สำหรับ batch generation",
+      "เมื่อต้องการ control style ไม่ให้ drift จาก brand tone ที่ต้องการ",
+    ],
     examples: [
       "--no text, watermark, signature, low quality, blurry",
       "Negative: ugly, deformed, low quality, text, logo",
@@ -1075,6 +1286,11 @@ const BASE_TERMS: UXTerm[] = [
       "Aspect ratio กำหนด composition ของภาพ สำคัญมากสำหรับ UI: hero section ต้องการ 16:9 หรือ 21:9, product feature ใช้ 4:3 หรือ 1:1, social media post ใช้ 1:1 หรือ 4:5",
     whyItMatters:
       "ถ้าไม่ระบุ ratio AI จะ default ไป 1:1 ซึ่งอาจไม่เหมาะกับ use case นั้น การระบุ ratio ตั้งแต่แรกประหยัด crop และ recompose ทีหลัง",
+    whenToUse: [
+      "ก่อน generate AI image ทุกครั้งเพื่อให้ได้ ratio ที่เหมาะกับ placement",
+      "เมื่อ create image สำหรับ specific context เช่น social media, product card, banner",
+      "ตอน batch generate assets ที่ต้องการ consistent dimensions ทั้ง set",
+    ],
     examples: [
       "Midjourney: --ar 16:9 สำหรับ hero banner",
       "DALL-E: 'landscape 16:9 aspect ratio'",
@@ -1102,6 +1318,11 @@ const BASE_TERMS: UXTerm[] = [
       "User interview เป็น qualitative research ที่ใช้ open-ended questions เพื่อ explore ประสบการณ์และความคิดของ user ไม่ใช่แค่ test usability แต่เพื่อเข้าใจ why",
     whyItMatters:
       "Survey บอก 'อะไร' Interview บอก 'ทำไม' — เข้าใจ underlying motivation ที่ survey ไม่สามารถ capture ได้ ต้องทำก่อน design decision ใหญ่",
+    whenToUse: [
+      "ก่อน start design phase ใหม่เพื่อเข้าใจ user needs จากปากจริง",
+      "เมื่อ feature ที่ ship แล้วมี adoption ต่ำและต้องหาสาเหตุที่แท้จริง",
+      "ตอน validate assumption ก่อนลงทุนใน development เต็มรูปแบบ",
+    ],
     examples: [
       "5-7 user interviews ก่อน redesign major feature",
       "Jobs-to-be-done interview เพื่อเข้าใจ motivation การซื้อ",
@@ -1127,6 +1348,11 @@ const BASE_TERMS: UXTerm[] = [
       "Usability testing ให้ user ทำ realistic tasks บน prototype หรือ live product ขณะ think-aloud ค้นหา usability issues ที่ designer/developer ไม่เห็น 5 users เจอปัญหาหลักได้ถึง 85%",
     whyItMatters:
       "Designer อยู่กับ design นานเกินไปจนมองไม่เห็น obvious problems User testing เปิดเผย 'curse of knowledge' — สิ่งที่เราคิดว่าชัดแจ้งแต่ user งงมาก",
+    whenToUse: [
+      "ก่อน ship major feature เพื่อ validate UX กับ real users",
+      "เมื่อ conversion rate ต่ำและต้องหาจุด friction ที่ชัดเจน",
+      "ตอน compare 2 design directions ด้วย real user observation",
+    ],
     examples: [
       "Moderated usability test 5 คน พร้อม task scenario และ observation notes",
       "Unmoderated test ด้วย Maze/UserTesting ที่ users ทำเองที่บ้าน",
@@ -1152,6 +1378,11 @@ const BASE_TERMS: UXTerm[] = [
       "A/B testing แบ่ง traffic เป็นสองกลุ่ม แต่ละกลุ่มเห็น version ต่างกัน และ measure metric ที่กำหนด (conversion, click rate, etc.) ต้องมี statistical significance ก่อน conclude",
     whyItMatters:
       "A/B test ป้องกันการ rollout feature ที่ 'ดูดี' แต่ลด conversion จริง ต้องระวัง: test ครั้งเดียวกันทีเดียวได้แค่ 1 variable ไม่อย่างนั้นไม่รู้ว่าอะไรส่งผล",
+    whenToUse: [
+      "เมื่อต้องการ data-driven decision ระหว่าง 2 design options",
+      "ตอน optimize conversion-critical page เช่น pricing, checkout, signup",
+      "เมื่อ rollout feature ใหม่แบบ gradual เพื่อ measure impact ก่อน full release",
+    ],
     examples: [
       "Test CTA copy 'Start Free Trial' vs 'Get Started Free' เพื่อ measure click rate",
       "Test hero headline 2 version เพื่อ measure bounce rate",
@@ -1178,6 +1409,11 @@ const BASE_TERMS: UXTerm[] = [
       "WCAG (Web Content Accessibility Guidelines) 2.1 Level AA เป็น standard ที่ government และ enterprise ใช้เป็น legal requirement มี 4 หลักการ: Perceivable, Operable, Understandable, Robust (POUR)",
     whyItMatters:
       "WCAG compliance ไม่ใช่แค่ ethical เป็น legal requirement ในหลายประเทศ และ accessibility ที่ดีมักทำให้ UX ดีขึ้นสำหรับทุกคน ไม่ใช่แค่ คนพิการ",
+    whenToUse: [
+      "เมื่อ audit accessibility ของ product ก่อน launch หรือ major update",
+      "ตอน review component ใหม่ว่า meet minimum WCAG AA standard",
+      "เมื่อ establish accessibility acceptance criteria สำหรับทีม",
+    ],
     examples: [
       "Contrast ratio ≥ 4.5:1 สำหรับ normal text",
       "Keyboard navigation ทุก interactive element",
@@ -1204,6 +1440,11 @@ const BASE_TERMS: UXTerm[] = [
       "Contrast ratio คำนวณจาก relative luminance ของสองสี Normal text ต้องการ 4.5:1, large text (18pt+) ต้องการ 3:1 เพื่อผ่าน WCAG AA ใช้ tools เช่น WebAIM Contrast Checker",
     whyItMatters:
       "Text ที่ contrast ต่ำอ่านยากสำหรับคนตาไม่ดีหรืออยู่กลางแดด ปัญหาบ่อยคือ gray text บน white background หรือ colored text บน colored background",
+    whenToUse: [
+      "เมื่อ choose text/background color combination ใน design system",
+      "ตอน review color palette ใหม่ว่า pass WCAG AA (4.5:1) ทุก combination",
+      "เมื่อ implement dark mode หรือ new theme ที่อาจกระทบ contrast",
+    ],
     examples: [
       "#ffffff on #8b5cf6 = 5.74:1 (Pass AA)",
       "#6e7681 on #0d1117 = 4.8:1 (Pass AA)",
@@ -1228,6 +1469,11 @@ const BASE_TERMS: UXTerm[] = [
       "Keyboard accessibility กำหนดว่า user ต้องสามารถ navigate และ interact กับทุก function โดยไม่ต้องใช้ mouse Tab order ต้องสมเหตุสมผล focus ต้องเห็นชัด modal ต้องมี focus trap",
     whyItMatters:
       "Keyboard navigation ไม่ใช่แค่สำหรับ screen reader user — คนที่มีปัญหา motor ไม่สามารถใช้ mouse ได้ Power user ก็ prefer keyboard สำหรับ speed",
+    whenToUse: [
+      "ตอน implement interactive component เช่น modal, dropdown, menu, tab",
+      "เมื่อ audit ว่า keyboard-only user ใช้งาน flow ทั้งหมดได้ครบไหม",
+      "เมื่อ QA accessibility ก่อน ship โดยทดสอบโดยไม่ใช้ mouse",
+    ],
     examples: [
       "Tab ไปที่ button แล้วกด Enter เพื่อ click",
       "Arrow keys ใน dropdown เพื่อเลือก option",
@@ -1253,6 +1499,11 @@ const BASE_TERMS: UXTerm[] = [
       "Screen reader ใช้ HTML semantics และ ARIA attributes เพื่อ understand และอ่าน content ต้องใช้ heading hierarchy ที่ถูกต้อง, aria-label สำหรับ icon buttons, role สำหรับ custom components",
     whyItMatters:
       "เว็บที่ไม่ใช้ semantic HTML จะอ่านเป็น 'div div div' ไม่มีความหมาย การทดสอบด้วย VoiceOver/NVDA เปิดเผยปัญหาที่ visual check ไม่เจอ",
+    whenToUse: [
+      "เมื่อ implement ARIA labels, roles, หรือ live regions ใน component",
+      "ตอน audit ว่า content มี meaningful sequence เมื่อ read ด้วย screen reader",
+      "เมื่อ review custom interactive component ที่ native element ทำไม่ได้",
+    ],
     examples: [
       "<button aria-label='Close modal'>✕</button> แทน <div onclick>✕</div>",
       "aria-live='polite' บน toast container เพื่อ announce ได้เมื่อ update",
@@ -1277,6 +1528,11 @@ const BASE_TERMS: UXTerm[] = [
       "alt attribute บน <img> tag อธิบาย content ของ image ให้ screen reader และ search engine Alt text ที่ดี describe สิ่งที่ image conveying ใน context ของ page ไม่ใช่แค่บรรยาย pixel",
     whyItMatters:
       "Alt text ว่างหรือ alt='image' ทำให้ screen reader อ่านชื่อไฟล์แทน Image ที่เป็น content ต้องมี descriptive alt text ทุกอัน",
+    whenToUse: [
+      "ทุกครั้งที่ add image ใน codebase, CMS, หรือ design system",
+      "ตอน audit ว่า image ทั้งหมดมี alt text ที่ meaningful ไม่ใช่แค่ filename",
+      "เมื่อ write content guideline สำหรับ content team",
+    ],
     examples: [
       "alt='User growth chart showing 50% increase in Q2 2025'",
       "alt='' สำหรับ decorative divider image",
@@ -1303,6 +1559,11 @@ const BASE_TERMS: UXTerm[] = [
       "Conversion rate = (Conversions / Total visitors) × 100 ควร define conversion ให้ชัดก่อน: macro conversion (purchase/signup) หรือ micro conversion (newsletter, trial, click CTA)",
     whyItMatters:
       "เพิ่ม conversion rate 1% บน traffic เยอะอาจ worth มากกว่าเพิ่ม traffic 2x Design decision ทุกอย่างควรมองผ่านเลนส์ของ impact ต่อ conversion",
+    whenToUse: [
+      "เมื่อ measure ผลลัพธ์ของ UX change บน conversion-critical page",
+      "ตอน prioritize UX improvement backlog ว่าอะไรส่งผล revenue มากสุด",
+      "เมื่อ present business impact ของ design decision ต่อ leadership",
+    ],
     examples: [
       "Landing page conversion rate: 3.2% (industry average 2-5%)",
       "Checkout completion rate: 65% (target 75%)",
@@ -1327,6 +1588,11 @@ const BASE_TERMS: UXTerm[] = [
       "Bounce rate ไม่ได้แย่เสมอ — single-page content เช่น blog อาจมี bounce rate 70-90% แต่ยังถือว่าสำเร็จถ้า user อ่านจบ ควร interpret ร่วมกับ time on page และ scroll depth",
     whyItMatters:
       "Bounce rate สูงบน landing page มักหมายถึง headline ไม่ตรง intent, load เร็วเกินไป หรือ UX ทำให้ confused ต้อง diagnose ก่อน fix",
+    whenToUse: [
+      "เมื่อ diagnose ว่าทำไม landing page ไม่ convert visitor ให้เป็น user",
+      "ตอน audit above-the-fold content ว่า engage user ได้ภายใน 5 วินาทีไหม",
+      "เมื่อ A/B test headline, hero, หรือ page speed เพื่อลด bounce",
+    ],
     examples: [
       "Landing page bounce rate 78% → investigate hero message alignment กับ ad copy",
       "Dashboard bounce rate 20% → users engaged มาก",
@@ -1351,6 +1617,11 @@ const BASE_TERMS: UXTerm[] = [
       "Trust signals ลด anxiety และ risk perception ของ user ก่อน conversion แบ่งเป็น: social proof (testimonials, user count, logos), authority (media mentions, awards), security (SSL badge, payment icons)",
     whyItMatters:
       "User ไม่ซื้อ/ไม่ signup เพราะไม่แน่ใจว่า product นี้ real หรือ worth it Trust signals ตอบ objection เหล่านี้โดยปริยาย",
+    whenToUse: [
+      "เมื่อ design pricing page, checkout flow, หรือ signup form",
+      "ตอน review conversion rate ต่ำว่ามี trust gap ที่ต้องแก้ไหม",
+      "เมื่อ place testimonials, security badges, social proof ให้ close to decision point",
+    ],
     examples: [
       "'Join 50,000+ teams' social proof counter",
       "Customer logos ของ well-known companies",
@@ -1360,7 +1631,7 @@ const BASE_TERMS: UXTerm[] = [
       "เพิ่ม trust signals บน landing page นี้: ระบุ objection ที่ user น่าจะมี แล้ว map trust signal ที่เหมาะกับแต่ละ objection",
     ],
     tags: ["trust", "social-proof", "conversion", "credibility"],
-    visualType: "cta",
+    visualType: "trustSignals",
     relatedSlugs: ["conversion-rate", "cta-hierarchy", "hero-section"],
   },
   {
@@ -1376,6 +1647,11 @@ const BASE_TERMS: UXTerm[] = [
       "CTA hierarchy กำหนดว่า action ใดสำคัญที่สุดในหน้านั้น Primary CTA ต้องโดดเด่นที่สุด Secondary CTA ต้องไม่แย่ง attention กฎ: มี primary CTA เดียวต่อ viewport",
     whyItMatters:
       "หน้าที่มี CTA เยอะเท่ากันหมดทำให้ user เลือกไม่ถูกและ conversion ต่ำ Hierarchy ที่ชัดทำให้ user รู้ทันทีว่า next action คืออะไร",
+    whenToUse: [
+      "เมื่อ page มี button หลายตัวและ user ไม่ชัดเจนว่าต้องกดอะไรก่อน",
+      "ตอน review section ที่มี primary และ secondary actions ต้องชัดเจนว่าอะไรสำคัญกว่า",
+      "เมื่อ audit ว่า button visual priority สอดคล้องกับ business goal",
+    ],
     examples: [
       "Primary: 'Start Free Trial' (filled, purple), Secondary: 'See Demo' (outlined), Tertiary: 'Learn more' (text link)",
     ],
@@ -1383,7 +1659,7 @@ const BASE_TERMS: UXTerm[] = [
       "Review CTA hierarchy ของหน้านี้: มี primary CTA เดียวต่อ section ไหม? secondary ไม่แย่ง attention primary ไหม? label ทุกตัว action-oriented ไหม?",
     ],
     tags: ["cta", "conversion", "hierarchy", "button"],
-    visualType: "cta",
+    visualType: "conversionCTA",
     relatedSlugs: ["cta", "conversion-rate", "visual-hierarchy"],
   },
 
@@ -1401,6 +1677,11 @@ const BASE_TERMS: UXTerm[] = [
       "Color tokens แบ่งเป็น primitive tokens (raw colors: purple-500 = #8b5cf6) และ semantic tokens (color-bg-card = purple-500) Semantic layer ทำให้ rebrand ง่าย และ dark/light mode swap สะดวก",
     whyItMatters:
       "ถ้าใช้ hex value ตรง rebrand หมายความว่า find-replace ทั้ง codebase Color token ทำให้ change 1 value แล้ว update ทุกที่ที่ใช้ token นั้น",
+    whenToUse: [
+      "เมื่อ implement หรือ extend color system ของ design system",
+      "ตอน audit ว่า color ถูกใช้ตาม semantic role ไม่ใช่แค่ aesthetic",
+      "เมื่อ support dark mode, theming, หรือ brand customization",
+    ],
     examples: [
       "--color-brand-primary → used by buttons, links, highlights",
       "--color-text-muted → used by timestamps, captions, metadata",
@@ -1425,6 +1706,11 @@ const BASE_TERMS: UXTerm[] = [
       "Typography scale กำหนด font sizes, line heights, font weights ที่ใช้ใน product เพื่อ visual harmony สร้างได้จาก modular scale (ratio เช่น 1.25) หรือ manual steps",
     whyItMatters:
       "ไม่มี scale = designer/developer ใช้ font size random ทำให้ inconsistent Typography scale บังคับให้เลือกจาก defined set เท่านั้น",
+    whenToUse: [
+      "เมื่อ define หรือ audit type system ของ product",
+      "ตอน review codebase ว่า font size ทั้งหมดอยู่ใน scale ที่กำหนดหรือ freestyle",
+      "เมื่อ align typographic rules ระหว่าง designer (Figma) และ developer (CSS)",
+    ],
     examples: [
       "xs: 12px, sm: 14px, base: 16px, lg: 18px, xl: 20px, 2xl: 24px, 3xl: 30px, 4xl: 36px",
     ],
@@ -1448,6 +1734,11 @@ const BASE_TERMS: UXTerm[] = [
       "Component library คือ implementation layer ของ design system มี components ที่ reusable ข้าม project, documented, tested, และ versioned อาจ publish เป็น npm package",
     whyItMatters:
       "ไม่มี component library = developer สร้าง button ใหม่ทุก project และทุกคนทำต่างกัน Component library ทำให้ velocity เร็วขึ้นและ consistency สูงขึ้น",
+    whenToUse: [
+      "เมื่อ start project ใหม่และ evaluate ว่าจะ build หรือ adopt existing library",
+      "ตอน audit ว่า components ทั้งหมด consistent, documented, และ reusable",
+      "เมื่อ plan component documentation และ Storybook สำหรับทีม",
+    ],
     examples: [
       "shadcn/ui, Radix UI, MUI, Ant Design",
       "Internal company component library ที่ built บน Radix + Tailwind",
@@ -1461,4 +1752,4 @@ const BASE_TERMS: UXTerm[] = [
   },
 ];
 
-export const TERMS: UXTerm[] = [...BASE_TERMS, ...EXTRA_TERMS];
+export const TERMS: UXTerm[] = [...BASE_TERMS, ...EXTRA_TERMS, ...SPEC_V3_TERMS];

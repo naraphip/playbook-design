@@ -13,6 +13,38 @@ export type TermCategory =
   | "design-system";
 
 export type VisualType =
+  | "buttonVariants"
+  | "formFieldStates"
+  | "searchAndFilter"
+  | "tabNavigation"
+  | "modalPreview"
+  | "drawerPreview"
+  | "toastStack"
+  | "emptyState"
+  | "skeletonLoading"
+  | "dataTable"
+  | "pricingCards"
+  | "heroSection"
+  | "conversionCTA"
+  | "accessibilityFocus"
+  | "keyboardNavigation"
+  | "colorContrast"
+  | "responsiveGrid"
+  | "densityComparison"
+  | "hierarchyComparison"
+  | "cardLayout"
+  | "designTokens"
+  | "componentVariants"
+  | "sidebarNavigation"
+  | "commandPalette"
+  | "mobileForm"
+  | "checkoutFriction"
+  | "trustSignals"
+  | "promptCardPreview"
+  | "beforeAfterNoiseReduction"
+  | "styleComparison"
+  | "glassPanel"
+  | "themeComparison"
   | "cta"
   | "navbar"
   | "sidebar"
@@ -55,14 +87,17 @@ export type UXTerm = {
   icon: string;
   term: string;
   pronunciation?: string;
+  aliases?: string[];
   level: TermLevel;
   shortDefinition: string;
   fullDefinition: string;
   whyItMatters: string;
+  whenToUse?: string[];
   examples: string[];
   prompts: string[];
   tags: string[];
   visualType: VisualType;
+  demoConfig?: Record<string, string | number | boolean | string[]>;
   relatedSlugs: string[];
 };
 
@@ -93,4 +128,5 @@ export type Technique = {
   examplePrompt: string;
   commonMistakes: string[];
   tags: string[];
+  relatedTerms?: string[];
 };

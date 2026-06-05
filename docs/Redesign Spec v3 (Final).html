@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BrandBatch AI — Redesign Spec v3 (Final)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Thai:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="spec-v3.css">
+</head>
+<body>
+<div class="wrap">
+
+  <!-- =================== MASTHEAD =================== -->
+  <header class="mast">
+    <div class="mast-row">
+      <span>Redesign Specification — Final</span>
+      <span>v3 · 29 May 2026</span>
+    </div>
+    <h1>One workspace, <em>every screen.</em></h1>
+    <p class="lede">
+      v3 is the consolidation release. The <strong>Workspace dashboard becomes the single
+      source of truth</strong> — its tokens, shell, components and rhythm now govern every
+      page of BrandBatch AI, from landing to generator to settings. Density ships
+      <strong>Compact</strong> by default. No new features, no new colors, no new fonts.
+    </p>
+    <div class="meta">
+      <div><div class="k">Source of truth</div><div class="v">Workspace.html</div></div>
+      <div><div class="k">Density</div><div class="v">Compact (locked)</div></div>
+      <div><div class="k">Scope</div><div class="v">All 14 surfaces</div></div>
+      <div><div class="k">Status</div><div class="v">Ready for Claude Code</div></div>
+    </div>
+  </header>
+
+  <!-- =================== TOC =================== -->
+  <nav class="toc">
+    <a href="#whatsnew"><span class="n">01</span><span>What changed in v3</span></a>
+    <a href="#foundations"><span class="n">02</span><span>Foundations &amp; tokens</span></a>
+    <a href="#density"><span class="n">03</span><span>Density — Compact</span></a>
+    <a href="#shell"><span class="n">04</span><span>The app shell</span></a>
+    <a href="#components"><span class="n">05</span><span>Component library</span></a>
+    <a href="#app-pages"><span class="n">06</span><span>App surfaces</span></a>
+    <a href="#marketing"><span class="n">07</span><span>Marketing surfaces</span></a>
+    <a href="#auth"><span class="n">08</span><span>Auth surfaces</span></a>
+    <a href="#handoff"><span class="n">09</span><span>Build order &amp; handoff</span></a>
+  </nav>
+
+  <!-- =================== 01 WHAT'S NEW =================== -->
+  <section id="whatsnew">
+    <div class="sec-no">01 — What changed in v3</div>
+    <h2>Stop designing pages. Compose one system.</h2>
+    <p class="kicker">
+      v1 specced the landing + generator. v2 polished them and patched tablets. They drifted —
+      three type systems, two shells, inconsistent density. v3 collapses everything onto the
+      Workspace dashboard so a seller feels the same product on every screen.
+    </p>
+
+    <h3>The five decisions that define v3</h3>
+    <div class="principles">
+      <div class="principle">
+        <div class="n">01</div>
+        <div class="t">Workspace is canon</div>
+        <div class="d">Every surface inherits the Workspace shell, tokens and components. New screens are assembled from existing parts, not designed fresh.</div>
+      </div>
+      <div class="principle">
+        <div class="n">02</div>
+        <div class="t">One type family</div>
+        <div class="d">Newsreader is retired. Inter (+ Noto Sans Thai) carries every headline; JetBrains Mono for labels &amp; metadata. Marketing and app now match.</div>
+      </div>
+      <div class="principle">
+        <div class="n">03</div>
+        <div class="t">Compact by default</div>
+        <div class="d">The <code class="inl">density-compact</code> scale ships as the default for all authenticated surfaces. Cozy stays available as a user preference only.</div>
+      </div>
+      <div class="principle">
+        <div class="n">04</div>
+        <div class="t">One accent rule</div>
+        <div class="d">Orange = primary action (Generate / Download / New). Indigo = selection &amp; AI-adjacent only. Ink = everything else. No exceptions.</div>
+      </div>
+      <div class="principle">
+        <div class="n">05</div>
+        <div class="t">Deterministic voice</div>
+        <div class="d">BrandBatch renders templates, it doesn't "AI-generate". The v2 vocabulary &amp; sparkle guardrails carry forward unchanged.</div>
+      </div>
+    </div>
+
+    <h3>What v3 supersedes / keeps</h3>
+    <table class="spec">
+      <thead><tr><th>Area</th><th>v1 / v2 state</th><th>v3 final</th></tr></thead>
+      <tbody>
+        <tr><td>Type system</td><td>Newsreader serif for display + Inter for UI</td><td><span class="pill brand">Changed</span> Inter / Noto Sans Thai only — serif removed everywhere</td></tr>
+        <tr><td>App shell</td><td>Bespoke per page</td><td><span class="pill brand">New</span> Single Sidebar + TopBar shell on all authed routes</td></tr>
+        <tr><td>Density</td><td>Implicit / cozy</td><td><span class="pill locked">Locked</span> Compact default, Cozy = opt-in preference</td></tr>
+        <tr><td>Color tokens</td><td>v1 token set</td><td><span class="pill good">Kept</span> Identical 17-token palette</td></tr>
+        <tr><td>Generator 4-zone shell</td><td>WS3 / WS15 slide-over layout</td><td><span class="pill good">Kept</span> Wrapped inside the new shell</td></tr>
+        <tr><td>Vocabulary + sparkle budget</td><td>v2 WS12 guardrails</td><td><span class="pill good">Kept</span> Unchanged, still CI-linted</td></tr>
+        <tr><td>1080×1080 export math</td><td>Untouched</td><td><span class="pill good">Kept</span> Untouched</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- =================== 02 FOUNDATIONS =================== -->
+  <section id="foundations">
+    <div class="sec-no">02 — Foundations &amp; tokens</div>
+    <h2>The smallest palette that dresses fourteen screens.</h2>
+
+    <h3>Color — 17 tokens, warm-toned</h3>
+    <p>All neutrals are warm (paper, not white-grey). One brand accent (orange), one support accent (indigo), three state colors. Cards are pure white to lift off the paper field.</p>
+    <div class="swatches">
+      <div class="sw"><div class="chip" style="background:var(--bb-orange)"></div><div><div class="name">bb-orange</div><div class="hex">#F04E23</div></div><div class="use">Primary CTA — Generate, Download, New.</div></div>
+      <div class="sw"><div class="chip" style="background:var(--bb-orange-2)"></div><div><div class="name">bb-orange-2</div><div class="hex">#D83D14</div></div><div class="use">Hover / active for orange.</div></div>
+      <div class="sw"><div class="chip" style="background:var(--bb-orange-soft)"></div><div><div class="name">bb-orange-soft</div><div class="hex">#FDE7DF</div></div><div class="use">Orange badge / chip fills.</div></div>
+      <div class="sw"><div class="chip" style="background:var(--bb-indigo)"></div><div><div class="name">bb-indigo</div><div class="hex">#4A37FF</div></div><div class="use">Selection ring, AI-adjacent only.</div></div>
+      <div class="sw"><div class="chip" style="background:var(--bb-indigo-soft)"></div><div><div class="name">bb-indigo-soft</div><div class="hex">#ECE8FF</div></div><div class="use">Indigo badge / cloud tag.</div></div>
+      <div class="sw"><div class="chip" style="background:var(--bb-gold)"></div><div><div class="name">bb-gold</div><div class="hex">#D6A84F</div></div><div class="use">Wordmark, avatar gradient.</div></div>
+      <div class="sw"><div class="chip" style="background:var(--bb-cream)"></div><div><div class="name">bb-cream</div><div class="hex">#F7E9D3</div></div><div class="use">Ambient wash, sample brand tone.</div></div>
+      <div class="sw"><div class="chip" style="background:var(--ink)"></div><div><div class="name">ink</div><div class="hex">#15161A</div></div><div class="use">Headlines, dark surfaces, active filter.</div></div>
+      <div class="sw"><div class="chip" style="background:var(--ink-2)"></div><div><div class="name">ink-2</div><div class="hex">#2C2E36</div></div><div class="use">Body text.</div></div>
+      <div class="sw"><div class="chip" style="background:var(--muted)"></div><div><div class="name">muted</div><div class="hex">#6B6F7A</div></div><div class="use">Labels, helper, metadata.</div></div>
+      <div class="sw"><div class="chip" style="background:var(--paper)"></div><div><div class="name">paper</div><div class="hex">#F6F4EF</div></div><div class="use">App + sidebar background.</div></div>
+      <div class="sw"><div class="chip" style="background:var(--paper-2)"></div><div><div class="name">paper-2</div><div class="hex">#EFECE4</div></div><div class="use">Hover surface, secondary buttons.</div></div>
+      <div class="sw"><div class="chip" style="background:var(--paper-3)"></div><div><div class="name">paper-3</div><div class="hex">#E8E4D8</div></div><div class="use">Tag chips, pressed surface.</div></div>
+      <div class="sw"><div class="chip" style="background:#fff;border:1px solid var(--rule)"></div><div><div class="name">card</div><div class="hex">#FFFFFF</div></div><div class="use">All cards &amp; panels.</div></div>
+      <div class="sw"><div class="chip" style="background:var(--rule)"></div><div><div class="name">rule</div><div class="hex">#E2DDD1</div></div><div class="use">Borders, dividers.</div></div>
+      <div class="sw"><div class="chip" style="background:var(--good)"></div><div><div class="name">good</div><div class="hex">#1F8A5B</div></div><div class="use">Saved, configured, ready.</div></div>
+      <div class="sw"><div class="chip" style="background:var(--crit)"></div><div><div class="name">crit</div><div class="hex">#C0291F</div></div><div class="use">Errors, destructive, over-quota.</div></div>
+    </div>
+
+    <h3>Typography — one sans, one mono</h3>
+    <p><strong>Inter</strong> (with <strong>Noto Sans Thai</strong> for Thai glyphs) is the only UI face — weights 400–800. <strong>JetBrains Mono</strong> 400–600 carries SKUs, filenames, counts, eyebrow labels and any metadata. Tabular numerals (<code class="inl">.tnum</code>) on all stats.</p>
+    <div class="type-row"><div class="label">display</div><div class="sample" style="font-weight:800;font-size:38px;line-height:1.02;letter-spacing:-0.025em;">Welcome back, Naraphip.</div><div class="spec">Inter 800 · 38 / 1.02 / -2.5%</div></div>
+    <div class="type-row"><div class="label">h / page</div><div class="sample" style="font-weight:800;font-size:22px;line-height:1.15;letter-spacing:-0.02em;">Products</div><div class="spec">Inter 800 · 22 / 1.15 · (Compact dc-h)</div></div>
+    <div class="type-row"><div class="label">h / section</div><div class="sample" style="font-weight:700;font-size:18px;">Saved templates</div><div class="spec">Inter 700 · 18 / 1.3</div></div>
+    <div class="type-row"><div class="label">h / card</div><div class="sample" style="font-weight:600;font-size:15px;">Radiance Boost Serum</div><div class="spec">Inter 600 · 15 / 1.35</div></div>
+    <div class="type-row"><div class="label">body</div><div class="sample" style="font-size:14px;color:var(--ink-2);">Pick a product to keep building marketplace-ready images.</div><div class="spec">Inter 400 · 14 / 1.55</div></div>
+    <div class="type-row"><div class="label">small</div><div class="sample" style="font-size:12px;color:var(--muted);">Last edited yesterday · 8 generations</div><div class="spec">Inter 400 · 12 / 1.5</div></div>
+    <div class="type-row"><div class="label">micro</div><div class="sample" style="font-size:10px;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;font-weight:700;">WORKSPACE</div><div class="spec">Inter 700 · 10 · UC · +12%</div></div>
+    <div class="type-row"><div class="label">mono</div><div class="sample mono" style="font-size:12px;color:var(--muted);">SKR-001 · ฿299 · 1080×1080</div><div class="spec">JetBrains Mono 500 · 10–12</div></div>
+
+    <div class="tokens cols-2">
+      <div>
+        <h3>Spacing</h3>
+        <div class="spacing-scale">
+          <div class="sp"><span class="name">1</span><div class="bar" style="width:4px"></div><span>4px</span></div>
+          <div class="sp"><span class="name">2</span><div class="bar" style="width:8px"></div><span>8px</span></div>
+          <div class="sp"><span class="name">3</span><div class="bar" style="width:12px"></div><span>12px</span></div>
+          <div class="sp"><span class="name">4</span><div class="bar" style="width:16px"></div><span>16px</span></div>
+          <div class="sp"><span class="name">5</span><div class="bar" style="width:20px"></div><span>20px</span></div>
+          <div class="sp"><span class="name">6</span><div class="bar" style="width:24px"></div><span>24px</span></div>
+          <div class="sp"><span class="name">8</span><div class="bar" style="width:32px"></div><span>32px</span></div>
+        </div>
+        <p style="font-size:12.5px;color:var(--muted);margin-top:12px;">Compact uses 12–16px as the working range. Section gaps = 32px. Reject custom values.</p>
+      </div>
+      <div>
+        <h3>Radii &amp; shadow</h3>
+        <div class="radii">
+          <div class="ra"><div class="box" style="border-radius:4px"></div><b>r-1</b> 4 · badges</div>
+          <div class="ra"><div class="box" style="border-radius:8px"></div><b>r-2</b> 8 · buttons/inputs</div>
+          <div class="ra"><div class="box" style="border-radius:12px"></div><b>r-3</b> 12 · panels</div>
+          <div class="ra"><div class="box" style="border-radius:16px"></div><b>r-4</b> 16 · product cards</div>
+          <div class="ra"><div class="box" style="border-radius:999px"></div><b>pill</b> chips/avatars</div>
+        </div>
+        <h4 style="margin-top:18px;">Two shadows only</h4>
+        <p style="font-size:13px;color:var(--ink-2);"><code class="inl">card</code> = <code class="inl">0 1px 0 / 0 2px 6px</code> on every resting card. <code class="inl">card-lift</code> on hover, <code class="inl">panel</code> on overlays/sheets. Borders stay 1px <code class="inl">rule</code>.</p>
+      </div>
+    </div>
+
+    <h3>Motion</h3>
+    <p>Enter animation only: <code class="inl">wsFadeUp</code> — opacity 0→1 + translateY 8px→0, 380ms <code class="inl">cubic-bezier(.2,.7,.3,1)</code>, staggered 40/100/160/220ms down the page. Hover lifts run 180ms. One looping animation allowed app-wide: the green "ready" status pulse. Everything wrapped in <code class="inl">prefers-reduced-motion</code>.</p>
+  </section>
+
+  <!-- =================== 03 DENSITY =================== -->
+  <section id="density">
+    <div class="sec-no">03 — Density · Compact (locked default)</div>
+    <h2>Compact is the shipping default.</h2>
+    <p class="kicker">
+      The Workspace exposes two density modes via the same <code class="inl">.dc-*</code> utility hooks.
+      v3 ships <strong>Compact</strong> as the default class on <code class="inl">&lt;body&gt;</code> / app root.
+      Cozy remains wired as a per-user preference (Settings → Appearance) but is never the default.
+    </p>
+
+    <div class="callout locked">
+      <div class="h">🔒 Default density rule</div>
+      <p>Authenticated app root mounts with <code class="inl">class="density-compact"</code>. Persist the user's choice in <code class="inl">localStorage["bb_density"]</code>; if unset, Compact. Marketing + auth pages are always Compact (no toggle).</p>
+    </div>
+
+    <h3>Compact token values (verbatim from Workspace)</h3>
+    <table class="spec">
+      <thead><tr><th>Hook</th><th>Compact (default)</th><th>Cozy (opt-in)</th><th>Applies to</th></tr></thead>
+      <tbody>
+        <tr><td><code>.dc-pad</code></td><td><code>16px</code></td><td><code>28px</code></td><td>Main content padding</td></tr>
+        <tr><td><code>.dc-card-pad</code></td><td><code>14px</code></td><td><code>20px</code></td><td>Card interior padding</td></tr>
+        <tr><td><code>.dc-h</code></td><td><code>22px / 1.15</code></td><td><code>32px / 1.1</code></td><td>Page H1 (greeting / section)</td></tr>
+        <tr><td><code>.dc-gap</code></td><td><code>12px</code></td><td><code>20px</code></td><td>Grid &amp; flex gaps</td></tr>
+        <tr><td><code>.dc-img-h</code></td><td><code>140px</code></td><td><code>200px</code></td><td>Product / generation thumbnail height</td></tr>
+        <tr><td><code>.dc-stat-num</code></td><td><code>26px</code></td><td><code>32px</code></td><td>Overview stat numerals</td></tr>
+        <tr><td><code>.dc-section-gap</code></td><td><code>32px</code></td><td><code>56px</code></td><td>Vertical gap between page sections</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px;color:var(--muted);">Any new component that should respond to density must use these hooks — never hard-code padding that competes with them.</p>
+  </section>
+
+  <!-- =================== 04 SHELL =================== -->
+  <section id="shell">
+    <div class="sec-no">04 — The app shell</div>
+    <h2>Sidebar + TopBar — the spine of every authed screen.</h2>
+    <p class="kicker">
+      Every route behind login renders inside one shell: a collapsible left Sidebar and a sticky
+      TopBar. Only the <em>main</em> region changes per route. This is what makes fourteen screens
+      feel like one product.
+    </p>
+
+    <div class="wf">
+      <div class="wf-title"><span>Shell · authed app</span><span class="dim">Sidebar 252 / 68 · TopBar 56</span></div>
+      <div class="frame app">
+        <div class="b topbar"><span><strong>BrandBatch</strong> › Products</span><span>⌘K&nbsp;&nbsp;·&nbsp;&nbsp;⚡9&nbsp;&nbsp;EN·TH&nbsp;&nbsp;◍</span></div>
+        <div class="b side">
+          <div class="pin" style="height:24px;background:var(--ink)"></div>
+          <div class="pin active"></div>
+          <div class="pin"></div><div class="pin"></div><div class="pin"></div>
+          <div class="pin"></div><div class="pin"></div>
+        </div>
+        <div class="b paper" style="padding:8px;">
+          <div class="lbl">MAIN — route content</div>
+          <div class="cardgrid" style="margin-top:6px;">
+            <div class="pc"><div class="img"></div><div class="ln"></div><div class="ln sm"></div></div>
+            <div class="pc"><div class="img"></div><div class="ln"></div><div class="ln sm"></div></div>
+            <div class="pc"><div class="img"></div><div class="ln"></div><div class="ln sm"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tokens cols-2">
+      <div>
+        <h3>Sidebar (252px / 68px collapsed)</h3>
+        <ul>
+          <li><strong>Workspace switcher</strong> — BB mark + name + handle, top, ruled below.</li>
+          <li><strong>3 nav groups</strong> with mono group labels:
+            <br>· <em>Workspace</em> — Overview · Products · Generator
+            <br>· <em>Library</em> — Templates · Brand Kit · Product Photos · Generations · Marketplace <span class="pill">Soon</span>
+            <br>· <em>Account</em> — Credits &amp; Billing · Settings</li>
+          <li>Active item: <code class="inl">paper-2</code> fill, orange 3px left rule, orange icon.</li>
+          <li>Counts right-aligned in mono; status dot for configured items.</li>
+          <li>Footer: credits meter card + collapse toggle. Collapsed = icon-only with tooltips.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>TopBar (56px, sticky)</h3>
+        <ul>
+          <li>Mobile burger (&lt;768) · breadcrumb <code class="inl">Workspace › Page</code>.</li>
+          <li>Search button (288px) with <code class="inl">⌘K</code> kbd — opens command palette.</li>
+          <li>Credits chip (⚡ + tnum count).</li>
+          <li>EN / TH segmented locale toggle (persists in localStorage).</li>
+          <li>Avatar + name + role, gradient orange→gold initial.</li>
+          <li>Background <code class="inl">paper/80</code> + backdrop-blur, 1px <code class="inl">rule</code> bottom.</li>
+        </ul>
+        <p style="font-size:12.5px;color:var(--muted);">Per-page, set the breadcrumb tail + active nav id only. Everything else is shared.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== 05 COMPONENTS =================== -->
+  <section id="components">
+    <div class="sec-no">05 — Component library</div>
+    <h2>Assemble from these. Don't invent.</h2>
+    <p class="kicker">Every screen in §06–08 is built from this set. They already exist in the Workspace build — reuse the component, don't re-style it.</p>
+
+    <div class="compo">
+      <div class="demo">
+        <div class="cap">Buttons</div>
+        <span class="btn btn-primary">✦ Generate</span>
+        <span class="btn btn-secondary">Templates</span>
+        <span class="btn btn-outline">Sort: Recent</span>
+        <span class="btn btn-ghost">Open history →</span>
+      </div>
+      <div class="demo">
+        <div class="cap">Inputs · chips · filters</div>
+        <span class="input">Search products, templates…</span>
+        <div style="display:flex;gap:6px;"><span class="chip active">All 6</span><span class="chip">Active 5</span><span class="chip">Drafts 1</span></div>
+      </div>
+      <div class="demo">
+        <div class="cap">Badges &amp; status</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;">
+          <span class="badge orange">Pinned</span>
+          <span class="badge indigo">☁ Cloud</span>
+          <span class="badge muted">Draft</span>
+          <span class="badge muted">Soon</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-2);"><span style="width:8px;height:8px;border-radius:50%;background:var(--good);"></span> Configured · saved 2s ago</div>
+      </div>
+      <div class="demo">
+        <div class="cap">Overview chip</div>
+        <div style="display:flex;flex-direction:column;align-items:center;">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);">Credits</div>
+          <div style="display:flex;align-items:baseline;gap:4px;"><span style="font-size:26px;font-weight:800;color:var(--bb-orange);" class="tnum">9</span><span style="font-size:10px;color:var(--muted);">/ 10 monthly</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Component scale — single source of truth</h3>
+    <table class="spec">
+      <thead><tr><th>Component</th><th>Height</th><th>Radius</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>TopBar</td><td><code>56px</code></td><td>—</td><td>Sticky, never wraps</td></tr>
+        <tr><td>Primary CTA (card)</td><td><code>36px</code></td><td><code>8</code></td><td><span class="pill brand">Orange only</span> · 12–13px semibold</td></tr>
+        <tr><td>Primary CTA (page header)</td><td><code>40px</code></td><td><code>8</code></td><td>New product / Generate</td></tr>
+        <tr><td>Secondary / outline</td><td><code>32px</code></td><td><code>8</code></td><td>paper-2 fill or 1px rule</td></tr>
+        <tr><td>Filter / sort chip</td><td><code>32px</code></td><td><code>8</code></td><td>Active = ink fill, white text</td></tr>
+        <tr><td>Icon button</td><td><code>28px</code></td><td><code>6</code></td><td>Card overflow, list actions</td></tr>
+        <tr><td>Input / search</td><td><code>36px</code></td><td><code>8</code></td><td>1px rule, mono placeholder OK</td></tr>
+        <tr><td>Nav item</td><td><code>~36px</code></td><td><code>8</code></td><td>Active = paper-2 + orange left rule</td></tr>
+        <tr><td>Badge / tag</td><td><code>~18px</code></td><td><code>4</code></td><td>9px uppercase semibold</td></tr>
+        <tr><td>Product card</td><td>auto</td><td><code>16</code></td><td>img (dc-img-h) + meta + 2 stats + 2 actions</td></tr>
+        <tr><td>Generation thumb</td><td><code>140px</code> img</td><td><code>12</code></td><td>220px wide, kind badge, mono filename</td></tr>
+        <tr><td>List row (template)</td><td><code>~52px</code></td><td>—</td><td>icon tile + name + meta + Use →</td></tr>
+        <tr><td>Preview canvas</td><td>min 480 sq</td><td><code>12</code></td><td>Fills shorter axis − 32px gutter</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Reusable blocks (named)</h3>
+    <table class="spec">
+      <thead><tr><th>Block</th><th>What it is</th><th>Reused on</th></tr></thead>
+      <tbody>
+        <tr><td><code>SectionHeader</code></td><td>Eyebrow + title + mono count + description + right action; ruled underline.</td><td>Every page section</td></tr>
+        <tr><td><code>ProductCard</code></td><td>Image area + SKU/badge + name/price + 2 stats + Generate/Templates.</td><td>Products, Overview, Photos</td></tr>
+        <tr><td><code>GenerationThumb</code></td><td>140px preview + kind badge + mono filename + product + time.</td><td>Overview rail, Generations</td></tr>
+        <tr><td><code>PickupCard</code></td><td>"Continue where you left off" banner: thumb + meta + open CTA.</td><td>Overview, Products</td></tr>
+        <tr><td><code>OverviewChip</code></td><td>Right-aligned label + big tnum value + sub.</td><td>Overview, Credits, Settings</td></tr>
+        <tr><td><code>BrandKitCard</code></td><td>Swatch grid + font + status dot + Manage.</td><td>Overview, Brand Kit</td></tr>
+        <tr><td><code>FilterToolbar</code></td><td>Filter pills + Sort button + grid/list toggle.</td><td>Products, Templates, Photos, Generations</td></tr>
+        <tr><td><code>EmptyTile</code></td><td>Dashed "New / Add" affordance ending a grid.</td><td>Products, Templates, Photos</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- =================== 06 APP PAGES =================== -->
+  <section id="app-pages">
+    <div class="sec-no">06 — App surfaces</div>
+    <h2>Nine authed screens, all inside the shell.</h2>
+    <p class="kicker">Each card below = one route. The shell (§04) and components (§05) are assumed. Only the main-region composition is specced. Density = Compact.</p>
+
+    <div class="pages">
+
+      <!-- Overview -->
+      <div class="page">
+        <div class="page-head"><span class="idx">06.1</span><span class="route">/dashboard</span><span class="nm">Overview</span><span class="tags"><span class="pill good">Workspace.html as-is</span></span></div>
+        <div class="page-body">
+          <div>
+            <p class="lbl">Composition (top → bottom)</p>
+            <ul>
+              <li>Greeting row: eyebrow + <code class="inl">dc-h</code> "Welcome back" + 3 <code class="inl">OverviewChip</code> (Credits · Generations · Products).</li>
+              <li><code class="inl">PickupCard</code> — the pinned in-progress product.</li>
+              <li>Products section — <code class="inl">SectionHeader</code> + <code class="inl">FilterToolbar</code> + 3-col card grid + <code class="inl">EmptyTile</code>.</li>
+              <li>Latest generations — horizontal scroll rail of <code class="inl">GenerationThumb</code>.</li>
+              <li>Brand kit + Saved templates — 1/3 + 2/3 split.</li>
+              <li>Footer (wordmark + links).</li>
+            </ul>
+          </div>
+          <div>
+            <p class="lbl">Reuses</p>
+            <div class="reuse"><span class="chipx">OverviewChip</span><span class="chipx">PickupCard</span><span class="chipx">SectionHeader</span><span class="chipx">FilterToolbar</span><span class="chipx">ProductCard</span><span class="chipx">GenerationThumb</span><span class="chipx">BrandKitCard</span></div>
+            <p class="lbl" style="margin-top:14px;">Notes</p>
+            <ul><li>This is the reference build. Everything else borrows from it.</li><li>Max content width 1320px, centered.</li></ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Products -->
+      <div class="page">
+        <div class="page-head"><span class="idx">06.2</span><span class="route">/products</span><span class="nm">Products</span><span class="tags"><span class="pill">grid + list</span></span></div>
+        <div class="page-body">
+          <div>
+            <p class="lbl">Composition</p>
+            <ul>
+              <li>Page header: <code class="inl">SectionHeader</code> (title "Products", mono count, "New product" 40px orange CTA).</li>
+              <li><code class="inl">FilterToolbar</code>: All / Active / Drafts / Pinned pills + Sort + grid/list toggle.</li>
+              <li>Default = 3-col <code class="inl">ProductCard</code> grid ending in <code class="inl">EmptyTile</code>.</li>
+              <li>List mode = dense rows (thumb 56px + name + SKU + stats + actions).</li>
+            </ul>
+          </div>
+          <div>
+            <p class="lbl">Reuses</p>
+            <div class="reuse"><span class="chipx">SectionHeader</span><span class="chipx">FilterToolbar</span><span class="chipx">ProductCard</span><span class="chipx">EmptyTile</span></div>
+            <p class="lbl" style="margin-top:14px;">Notes</p>
+            <ul><li>Each product is a project; card "Generate" deep-links to <code class="inl">/generator?product=…</code>.</li></ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Generator -->
+      <div class="page">
+        <div class="page-head"><span class="idx">06.3</span><span class="route">/generator</span><span class="nm">Generator</span><span class="tags"><span class="pill good">v1/v2 shell kept</span><span class="pill brand">in new shell</span></span></div>
+        <div class="page-body">
+          <div>
+            <p class="lbl">Composition</p>
+            <ul>
+              <li>Keeps the WS3/WS15 four-zone workspace: 48px rail · 280px slide-over panel · fluid canvas · 240px inspector.</li>
+              <li>Canvas anchored — never moves on tab switch. Warm gradient + grain bg.</li>
+              <li>Breadcrumb pills, Output-checks card (bottom-right, dismissable), Optional · Background removal card (the only ✦).</li>
+              <li>Creative-pack inspector + deterministic filename chip + Download PNG.</li>
+            </ul>
+          </div>
+          <div>
+            <p class="lbl">v3 changes</p>
+            <ul>
+              <li>Rail + topbar restyled to match the shell tokens; logo block aligns with Sidebar BB mark.</li>
+              <li>Compact density applies to panel padding &amp; control gaps.</li>
+              <li>Generate button = orange gradient + <code class="inl">⌘↵</code> kbd (unchanged).</li>
+            </ul>
+            <div class="callout" style="margin:12px 0 0;"><p><strong>Do not</strong> re-architect the generator. Wrap it; restyle surfaces to tokens; apply Compact. The export math is frozen.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Templates -->
+      <div class="page">
+        <div class="page-head"><span class="idx">06.4</span><span class="route">/templates</span><span class="nm">Templates</span></div>
+        <div class="page-body">
+          <div>
+            <p class="lbl">Composition</p>
+            <ul>
+              <li><code class="inl">SectionHeader</code> "Template library" + "New template" CTA.</li>
+              <li><code class="inl">FilterToolbar</code>: All / Cloud / Local + channel filter.</li>
+              <li>Card grid of template previews: 1:1 thumbnail, name, Cloud/Local badge, "Used N×", Use → / overflow.</li>
+              <li>Detail opens in a <code class="inl">panel</code>-shadow modal (preview + apply-to-product).</li>
+            </ul>
+          </div>
+          <div>
+            <p class="lbl">Reuses</p>
+            <div class="reuse"><span class="chipx">SectionHeader</span><span class="chipx">FilterToolbar</span><span class="chipx new">TemplateCard (from TemplatesCard list)</span><span class="chipx">EmptyTile</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Brand Kit -->
+      <div class="page">
+        <div class="page-head"><span class="idx">06.5</span><span class="route">/brand-kit</span><span class="nm">Brand Kit</span><span class="tags"><span class="pill good">● configured</span></span></div>
+        <div class="page-body">
+          <div>
+            <p class="lbl">Composition</p>
+            <ul>
+              <li>Two-column: left = editable <code class="inl">BrandKitCard</code> at full size (logo slot, swatch grid w/ hex, font picker, status). Right = live preview applying the kit to a sample cover.</li>
+              <li>Swatch add/remove inline; each swatch is name + hex + role.</li>
+              <li>Save = green "saved · local" status; identical pattern to generator topbar.</li>
+            </ul>
+          </div>
+          <div>
+            <p class="lbl">Reuses</p>
+            <div class="reuse"><span class="chipx">BrandKitCard</span><span class="chipx">SectionHeader</span><span class="chipx new">SwatchEditor</span><span class="chipx new">CoverPreview</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Photos -->
+      <div class="page">
+        <div class="page-head"><span class="idx">06.6</span><span class="route">/product-photos</span><span class="nm">Product Photos</span></div>
+        <div class="page-body">
+          <div>
+            <p class="lbl">Composition</p>
+            <ul>
+              <li><code class="inl">SectionHeader</code> + upload CTA + <code class="inl">FilterToolbar</code> (by product).</li>
+              <li>Masonry/grid of photo tiles (dc-img-h), each tagged with its product + "used in N generations".</li>
+              <li>Drag-and-drop <code class="inl">EmptyTile</code> to add; optional ✦ background-removal lives here too.</li>
+            </ul>
+          </div>
+          <div>
+            <p class="lbl">Reuses</p>
+            <div class="reuse"><span class="chipx">SectionHeader</span><span class="chipx">FilterToolbar</span><span class="chipx">EmptyTile</span><span class="chipx new">PhotoTile</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Generations -->
+      <div class="page">
+        <div class="page-head"><span class="idx">06.7</span><span class="route">/generation-history</span><span class="nm">Generations</span></div>
+        <div class="page-body">
+          <div>
+            <p class="lbl">Composition</p>
+            <ul>
+              <li><code class="inl">SectionHeader</code> + <code class="inl">FilterToolbar</code> (by product / kind: Template export · Cutout · Background).</li>
+              <li>Grid of <code class="inl">GenerationThumb</code> (here as a wrapping grid, not a rail) with mono filename + download.</li>
+              <li>Group by day with mono date dividers ("28 พ.ค. 2569").</li>
+            </ul>
+          </div>
+          <div>
+            <p class="lbl">Reuses</p>
+            <div class="reuse"><span class="chipx">SectionHeader</span><span class="chipx">FilterToolbar</span><span class="chipx">GenerationThumb</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Credits -->
+      <div class="page">
+        <div class="page-head"><span class="idx">06.8</span><span class="route">/credits</span><span class="nm">Credits &amp; Billing</span></div>
+        <div class="page-body">
+          <div>
+            <p class="lbl">Composition</p>
+            <ul>
+              <li>Hero row of <code class="inl">OverviewChip</code>s (credits left · used this month · plan).</li>
+              <li>Usage meter card (mirrors Sidebar footer meter at large size).</li>
+              <li>Plan cards (Personal MVP active) + usage history table (mono dates, tnum amounts).</li>
+            </ul>
+          </div>
+          <div>
+            <p class="lbl">Reuses</p>
+            <div class="reuse"><span class="chipx">OverviewChip</span><span class="chipx">SectionHeader</span><span class="chipx new">PlanCard</span><span class="chipx new">UsageTable</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings -->
+      <div class="page">
+        <div class="page-head"><span class="idx">06.9</span><span class="route">/settings</span><span class="nm">Settings</span><span class="tags"><span class="pill locked">Density toggle lives here</span></span></div>
+        <div class="page-body">
+          <div>
+            <p class="lbl">Composition</p>
+            <ul>
+              <li>Left sub-nav (Profile · Appearance · Language · Workspace · Danger zone) + right form panel.</li>
+              <li><strong>Appearance → Density</strong>: Compact (default) / Cozy segmented control, writes <code class="inl">bb_density</code>.</li>
+              <li>Forms use 36px inputs, ruled section dividers, single save bar.</li>
+            </ul>
+          </div>
+          <div>
+            <p class="lbl">Reuses</p>
+            <div class="reuse"><span class="chipx">SectionHeader</span><span class="chipx new">SettingsNav</span><span class="chipx new">FormRow</span><span class="chipx new">SegmentedControl</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="callout"><p><strong>Marketplace</strong> (<code class="inl">/marketplace</code>) stays a <span class="pill">Soon</span> nav item with a gated placeholder behind <code class="inl">?internal=1</code> — not a shipped surface in v3.</p></div>
+  </section>
+
+  <!-- =================== 07 MARKETING =================== -->
+  <section id="marketing">
+    <div class="sec-no">07 — Marketing surfaces</div>
+    <h2>Same paper, same type — no sidebar.</h2>
+    <p class="kicker">
+      Public pages drop the Sidebar/TopBar shell for a lightweight marketing nav, but inherit
+      every token, the Inter type system (no serif), Compact rhythm, cards and buttons. They
+      should read as the logged-out face of the same product.
+    </p>
+
+    <div class="pages">
+      <div class="page">
+        <div class="page-head"><span class="idx">07.1</span><span class="route">/</span><span class="nm">Landing</span><span class="tags"><span class="pill good">v2 Workbench hero kept</span></span></div>
+        <div class="page-body">
+          <div>
+            <p class="lbl">Composition</p>
+            <ul>
+              <li>Marketing nav: BB wordmark · Templates · About · Pricing · EN/TH · "Open generator →".</li>
+              <li>Workbench hero (v2 §02): left copy + formula card, right inputs-rail / preview / export-bar composition. Headline now Inter 800 (serif removed).</li>
+              <li>Sample gallery · 3-card problem · dark "How it works" · privacy band · footer.</li>
+            </ul>
+          </div>
+          <div>
+            <p class="lbl">v3 changes</p>
+            <ul><li>Retire Newsreader → Inter 800 display.</li><li>Buttons/cards/badges swapped to the §05 library.</li><li>Sparkle budget unchanged (✦ only on Optional assist + Try Generator).</li></ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="page">
+        <div class="page-head"><span class="idx">07.2</span><span class="route">/about-us</span><span class="nm">About</span></div>
+        <div class="page-body">
+          <div>
+            <p class="lbl">Composition</p>
+            <ul><li>Narrow prose column (max 72ch), mono section eyebrows, Inter headings.</li><li>Principle strip reusing the <code class="inl">.principle</code> card pattern.</li><li>Ruled metric row (sellers shipped, covers rendered) in tnum.</li></ul>
+          </div>
+          <div><p class="lbl">Reuses</p><div class="reuse"><span class="chipx">MarketingNav</span><span class="chipx">PrincipleCard</span><span class="chipx">SectionHeader</span></div></div>
+        </div>
+      </div>
+
+      <div class="page">
+        <div class="page-head"><span class="idx">07.3</span><span class="route">/pricing</span><span class="nm">Pricing</span></div>
+        <div class="page-body">
+          <div>
+            <p class="lbl">Composition</p>
+            <ul><li>2–3 <code class="inl">PlanCard</code>s (shared with /credits), Personal MVP highlighted with orange ring.</li><li>tnum prices, mono "per month", ruled feature lists with check glyphs.</li><li>FAQ accordion in card style.</li></ul>
+          </div>
+          <div><p class="lbl">Reuses</p><div class="reuse"><span class="chipx">PlanCard</span><span class="chipx">SectionHeader</span><span class="chipx new">FaqItem</span></div></div>
+        </div>
+      </div>
+
+      <div class="page">
+        <div class="page-head"><span class="idx">07.4</span><span class="route">/contact</span><span class="nm">Contact</span></div>
+        <div class="page-body">
+          <div>
+            <p class="lbl">Composition</p>
+            <ul><li>Two-column: contact form (36px inputs, FormRow) + side card with channels.</li><li>Privacy reassurance band reused from landing.</li></ul>
+          </div>
+          <div><p class="lbl">Reuses</p><div class="reuse"><span class="chipx">FormRow</span><span class="chipx new">ContactCard</span><span class="chipx">SectionHeader</span></div></div>
+        </div>
+      </div>
+
+      <div class="page">
+        <div class="page-head"><span class="idx">07.5</span><span class="route">/privacy-policy</span><span class="nm">Privacy Policy</span></div>
+        <div class="page-body">
+          <div>
+            <p class="lbl">Composition</p>
+            <ul><li>Single prose column, mono numbered section anchors, Inter body.</li><li>"Browser-only · stays on this device" callout at top using <code class="inl">.callout</code>.</li></ul>
+          </div>
+          <div><p class="lbl">Reuses</p><div class="reuse"><span class="chipx">MarketingNav</span><span class="chipx">Callout</span><span class="chipx new">DocSection</span></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== 08 AUTH =================== -->
+  <section id="auth">
+    <div class="sec-no">08 — Auth surfaces</div>
+    <h2>Centered card on the paper field.</h2>
+    <p class="kicker">Login &amp; Register share one centered-card layout on the warm paper background with the ambient wash. No shell, minimal nav (just the wordmark).</p>
+
+    <div class="wf">
+      <div class="wf-title"><span>Auth · centered card</span><span class="dim">max 420px · paper field</span></div>
+      <div class="frame" style="grid-template-columns:1fr;place-items:center;min-height:200px;padding:16px;">
+        <div class="b" style="width:240px;gap:8px;box-shadow:var(--shadow-panel);">
+          <div class="lbl">BB · BrandBatch</div>
+          <div class="t">Welcome back</div>
+          <div class="b paper" style="min-height:22px;padding:6px 8px;">email</div>
+          <div class="b paper" style="min-height:22px;padding:6px 8px;">password</div>
+          <div class="b orange" style="min-height:0;padding:7px;"><div class="t" style="text-align:center;">Sign in</div></div>
+          <div class="d" style="text-align:center;color:var(--muted);">New here? Create account</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pages" style="margin-top:14px;">
+      <div class="page">
+        <div class="page-head"><span class="idx">08.1</span><span class="route">/login</span><span class="nm">Login</span></div>
+        <div class="page-body">
+          <div><p class="lbl">Composition</p><ul><li>420px white card, <code class="inl">panel</code> shadow, 16px radius.</li><li>Wordmark + "Welcome back" (Inter 700) + 36px inputs + orange "Sign in" full-width.</li><li>Secondary link to Register; optional locale toggle top-right.</li></ul></div>
+          <div><p class="lbl">Reuses</p><div class="reuse"><span class="chipx">FormRow</span><span class="chipx">Button (primary)</span><span class="chipx new">AuthCard</span></div></div>
+        </div>
+      </div>
+      <div class="page">
+        <div class="page-head"><span class="idx">08.2</span><span class="route">/register</span><span class="nm">Register</span></div>
+        <div class="page-body">
+          <div><p class="lbl">Composition</p><ul><li>Same <code class="inl">AuthCard</code>; adds name field + terms checkbox.</li><li>Right-side (≥980px) optional value strip: 3 mono bullets on what they get.</li></ul></div>
+          <div><p class="lbl">Reuses</p><div class="reuse"><span class="chipx">AuthCard</span><span class="chipx">FormRow</span><span class="chipx new">ValueStrip</span></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =================== 09 HANDOFF =================== -->
+  <section id="handoff">
+    <div class="sec-no">09 — Build order &amp; handoff</div>
+    <h2>Ship the shell, then fill it.</h2>
+
+    <div class="ba">
+      <div class="col before">
+        <div class="h">Don't</div>
+        <ul>
+          <li>Re-design any page from scratch.</li>
+          <li>Add Newsreader or any third font.</li>
+          <li>Introduce colors outside the 17 tokens.</li>
+          <li>Make Cozy the default, or remove the toggle.</li>
+          <li>Re-architect the generator's export math.</li>
+          <li>Add "AI generated / Auto-frame / Smart layout" copy or extra ✦.</li>
+        </ul>
+      </div>
+      <div class="col after">
+        <div class="h">Build order</div>
+        <ul>
+          <li><strong>1.</strong> Extract Sidebar + TopBar into a shared <code class="inl">AppShell</code> (§04).</li>
+          <li><strong>2.</strong> Promote Workspace blocks to a real component lib (§05).</li>
+          <li><strong>3.</strong> Set <code class="inl">density-compact</code> default + Settings toggle (§03).</li>
+          <li><strong>4.</strong> Move /dashboard onto the shell (reference build).</li>
+          <li><strong>5.</strong> Build Products, Templates, Brand Kit, Photos, Generations from the lib.</li>
+          <li><strong>6.</strong> Wrap /generator in the shell; restyle to tokens.</li>
+          <li><strong>7.</strong> Re-skin marketing (drop serif) + auth cards.</li>
+          <li><strong>8.</strong> Re-run <code class="inl">npm run lint:vocab</code> + build.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout locked">
+      <div class="h">🔒 The one-line definition of done</div>
+      <p>A seller can move from landing → login → dashboard → any library page → generator and never feel a seam: same paper, same Inter, same Compact rhythm, same orange action, same cards.</p>
+    </div>
+  </section>
+
+  <div class="footnote">
+    <span>BrandBatch AI · Redesign Spec v3 (Final)</span>
+    <span>Source of truth: Workspace.html · Density: Compact</span>
+  </div>
+
+</div>
+</body>
+</html>

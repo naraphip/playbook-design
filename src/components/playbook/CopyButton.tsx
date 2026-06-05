@@ -27,10 +27,10 @@ export function CopyButton({ text, label, className = "" }: Props) {
     <button
       onClick={handleCopy}
       aria-label={copied ? "Copied!" : `Copy ${label ?? "to clipboard"}`}
-      className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium border transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
+      className={`inline-flex h-8 items-center gap-1.5 rounded-md border px-2.5 text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
         copied
-          ? "bg-success-soft text-success border-success/30"
-          : "bg-bg-soft text-text-secondary border-border hover:bg-bg-hover hover:text-text-primary"
+          ? "border-success/25 bg-success-soft text-success"
+          : "border-border bg-bg-surface text-text-secondary hover:bg-bg-soft hover:text-text-primary"
       } ${className}`}
     >
       {copied ? <Check size={12} /> : <Copy size={12} />}

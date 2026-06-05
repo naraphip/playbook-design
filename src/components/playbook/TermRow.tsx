@@ -1,6 +1,7 @@
 import { Bookmark, BookmarkCheck } from "lucide-react";
 import type { UXTerm } from "@/types/playbook";
-import { LevelBadge } from "./LevelBadge";
+import { CATEGORIES } from "@/data/categories";
+import { Badge, LevelBadge } from "./workspace";
 
 type Props = {
   term: UXTerm;
@@ -11,6 +12,8 @@ type Props = {
 };
 
 export function TermRow({ term, isSelected, isBookmarked, onSelect, onBookmark }: Props) {
+  const category = CATEGORIES.find((item) => item.id === term.category);
+
   return (
     <div
       role="button"
@@ -24,28 +27,35 @@ export function TermRow({ term, isSelected, isBookmarked, onSelect, onBookmark }
           onSelect(term);
         }
       }}
-      className={`group relative flex items-start gap-3 rounded-xl px-3 py-3 cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary
+      className={`group relative flex cursor-pointer items-start gap-2.5 rounded-md border px-2.5 py-2.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent
         ${isSelected
-          ? "bg-primary-soft border border-primary/20 shadow-sm"
-          : "border border-transparent hover:bg-bg-soft hover:border-border"
+          ? "border-accent/25 bg-accent-soft shadow-card before:absolute before:left-0 before:top-2 before:h-[calc(100%-16px)] before:w-[3px] before:rounded-full before:bg-accent"
+          : "border-transparent hover:border-border hover:bg-bg-soft"
         }`}
     >
-      <span className="text-xl shrink-0 mt-0.5 select-none">{term.icon}</span>
+      <span className={`mono flex h-8 w-8 shrink-0 items-center justify-center rounded-md border text-[10px] font-black uppercase ${
+        isSelected ? "border-accent/20 bg-bg-surface text-accent" : "border-border bg-bg-main text-text-muted"
+      }`}>
+        {term.icon.slice(0, 3)}
+      </span>
 
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 mb-0.5">
-          <span className={`text-sm font-semibold leading-snug truncate ${isSelected ? "text-primary" : "text-text-primary"}`}>
+        <div className="mb-1 flex min-w-0 items-center gap-1.5">
+          <span className={`truncate text-sm font-bold leading-snug ${isSelected ? "text-accent" : "text-text-primary"}`}>
             {term.term}
           </span>
           <LevelBadge level={term.level} />
         </div>
-        <p className="text-xs text-text-secondary line-clamp-2 leading-relaxed">
+        <div className="mb-1.5 flex items-center gap-1.5">
+          <Badge>{category?.label ?? term.category}</Badge>
+        </div>
+        <p className="line-clamp-2 text-xs leading-relaxed text-text-secondary">
           {term.shortDefinition}
         </p>
         {term.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-1.5">
+          <div className="mt-1.5 flex flex-wrap gap-x-1.5 gap-y-0.5">
             {term.tags.slice(0, 3).map((tag) => (
-              <span key={tag} className="text-xs text-text-muted">#{tag}</span>
+              <span key={tag} className="mono text-[10px] text-text-muted">#{tag}</span>
             ))}
           </div>
         )}
@@ -54,7 +64,7 @@ export function TermRow({ term, isSelected, isBookmarked, onSelect, onBookmark }
       <button
         onClick={(e) => { e.stopPropagation(); onBookmark(term.slug); }}
         aria-label={isBookmarked ? `Remove bookmark for ${term.term}` : `Bookmark ${term.term}`}
-        className={`shrink-0 p-1 rounded-lg transition-all focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary
+        className={`shrink-0 rounded-md p-1 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent
           ${isBookmarked
             ? "text-warning opacity-100"
             : "text-text-muted opacity-0 group-hover:opacity-100 group-focus-within:opacity-100"
