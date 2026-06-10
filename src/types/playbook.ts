@@ -163,11 +163,22 @@ export type Technique = {
 export type WorkflowStage = {
   id: string;
   title: string;
+  /** Short phase label, e.g. "Align", "Discover", "Deliver". */
+  phase: string;
   goal: string;
-  activities: string[];
-  deliverables: string[];
-  exitCriteria: string[];
+  whenToUse: string;
+  inputs: string[];
+  /** Step-by-step process. */
+  process: string[];
+  outputs: string[];
+  checklist: string[];
+  commonMistakes: string[];
+  /** What the next stage needs from this one. */
+  handoffNotes: string;
+  /** Useful terms — must resolve to UXTerm slugs. */
   termSlugs: string[];
+  /** Useful techniques — must resolve to Technique slugs. */
   techniqueSlugs: string[];
+  /** Useful prompts — must resolve to PromptItem ids. */
   promptIds: string[];
 };

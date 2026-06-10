@@ -7,6 +7,7 @@ import {
   PanelLeft,
   Search,
   Sparkles,
+  Workflow,
   X,
 } from "lucide-react";
 import type { ReactNode } from "react";
@@ -14,12 +15,13 @@ import type { TermCategory, TermLevel } from "@/types/playbook";
 import { CATEGORIES } from "@/data/categories";
 import { TERMS } from "@/data/terms";
 
-type ActiveRoute = "playbook" | "prompts" | "techniques";
+type ActiveRoute = "playbook" | "prompts" | "techniques" | "workflow";
 
 const navItems: Array<{ id: ActiveRoute; href: string; label: string; icon: LucideIcon }> = [
   { id: "playbook", href: "/", label: "Playbook", icon: BookOpen },
   { id: "prompts", href: "/prompts", label: "Prompts", icon: Library },
   { id: "techniques", href: "/techniques", label: "Techniques", icon: ClipboardList },
+  { id: "workflow", href: "/workflow", label: "Workflow", icon: Workflow },
 ];
 
 export function AppShell({
