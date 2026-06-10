@@ -33,10 +33,10 @@ export function TermRow({ term, isSelected, isBookmarked, onSelect, onBookmark }
           : "border-transparent hover:border-border hover:bg-bg-soft"
         }`}
     >
-      <span className={`mono flex h-8 w-8 shrink-0 items-center justify-center rounded-md border text-[10px] font-black uppercase ${
-        isSelected ? "border-accent/20 bg-bg-surface text-accent" : "border-border bg-bg-main text-text-muted"
+      <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md border text-base ${
+        isSelected ? "border-accent/20 bg-bg-surface" : "border-border bg-bg-main"
       }`}>
-        {term.icon.slice(0, 3)}
+        {term.icon}
       </span>
 
       <div className="flex-1 min-w-0">
@@ -50,7 +50,7 @@ export function TermRow({ term, isSelected, isBookmarked, onSelect, onBookmark }
           <Badge>{category?.label ?? term.category}</Badge>
         </div>
         <p className="line-clamp-2 text-xs leading-relaxed text-text-secondary">
-          {term.shortDefinition}
+          {term.shortDescription}
         </p>
         {term.tags.length > 0 && (
           <div className="mt-1.5 flex flex-wrap gap-x-1.5 gap-y-0.5">

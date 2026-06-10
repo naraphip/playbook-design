@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { ExternalLink, X } from "lucide-react";
-import type { PromptItem } from "@/types/playbook";
+import type { PromptAudience, PromptItem } from "@/types/playbook";
 import { PROMPTS } from "@/data/prompts";
 import {
   AppShell,
@@ -19,7 +19,7 @@ import {
 } from "./workspace";
 import { CopyButton } from "./CopyButton";
 
-const USE_CASE_META: Record<PromptItem["useCase"], { label: string; description: string }> = {
+const AUDIENCE_META: Record<PromptAudience, { label: string; description: string }> = {
   designer: { label: "For Designer", description: "สั่งงาน designer ให้ deliver ตรง design intent" },
   developer: { label: "For Developer", description: "แปลง UX/UI intent เป็น implementation ที่ชัดเจน" },
   "claude-code": { label: "For Claude Code", description: "Prompt สำหรับ coding agent และ UI refactor" },
@@ -29,32 +29,41 @@ const USE_CASE_META: Record<PromptItem["useCase"], { label: string; description:
   "ai-image": { label: "For AI Image", description: "Generate product visuals and UI mockups with constraints" },
 };
 
-const USE_CASE_ORDER: Array<PromptItem["useCase"] | "all"> = ["all", "designer", "developer", "claude-code", "ux-review", "accessibility", "conversion", "ai-image"];
+const AUDIENCE_ORDER: Array<PromptAudience | "all"> = ["all", "designer", "developer", "claude-code", "ux-review", "accessibility", "conversion", "ai-image"];
 
-function filterPrompts(prompts: PromptItem[], query: string, useCase: PromptItem["useCase"] | "all") {
+function filterPrompts(prompts: PromptItem[], query: string, audience: PromptAudience | "all") {
   const q = query.trim().toLowerCase();
   return prompts.filter((prompt) => {
-    if (useCase !== "all" && prompt.useCase !== useCase) return false;
+    if (audience !== "all" && prompt.audience !== audience) return false;
     if (!q) return true;
-    return [prompt.title, USE_CASE_META[prompt.useCase].label, prompt.level, prompt.prompt, ...prompt.tags].join(" ").toLowerCase().includes(q);
+    return [
+      prompt.title,
+      AUDIENCE_META[prompt.audience].label,
+      prompt.level,
+      prompt.useCase,
+      prompt.promptText,
+      ...prompt.inputRequired,
+      ...prompt.constraints,
+      ...prompt.tags,
+    ].join(" ").toLowerCase().includes(q);
   });
 }
 
 export function PromptLibraryClient() {
   const [query, setQuery] = useState("");
-  const [activeUseCase, setActiveUseCase] = useState<PromptItem["useCase"] | "all">("all");
+  const [activeAudience, setActiveAudience] = useState<PromptAudience | "all">("all");
   const [openPrompt, setOpenPrompt] = useState<PromptItem | null>(null);
 
-  const visible = useMemo(() => filterPrompts(PROMPTS, query, activeUseCase), [query, activeUseCase]);
+  const visible = useMemo(() => filterPrompts(PROMPTS, query, activeAudience), [query, activeAudience]);
   const counts = useMemo(() => {
     return PROMPTS.reduce<Record<string, number>>((acc, prompt) => {
-      acc[prompt.useCase] = (acc[prompt.useCase] ?? 0) + 1;
+      acc[prompt.audience] = (acc[prompt.audience] ?? 0) + 1;
       return acc;
     }, {});
   }, []);
 
   return (
-    <AppShell activeRoute="prompts" topbarSlot={<SearchInput value={query} onChange={setQuery} placeholder="Search prompt title, tags, preview..." label="Search prompts" className="mx-auto max-w-2xl" />}>
+    <AppShell activeRoute="prompts" topbarSlot={<SearchInput value={query} onChange={setQuery} placeholder="Search prompt title, use case, constraints..." label="Search prompts" className="mx-auto max-w-2xl" />}>
       <div className="flex h-full min-h-0 flex-col overflow-hidden bg-bg-main">
         <PageHeader
           title="Prompt Library"
@@ -64,10 +73,10 @@ export function PromptLibraryClient() {
         />
 
         <FilterToolbar>
-          {USE_CASE_ORDER.map((useCase) => (
-            <Chip key={useCase} active={activeUseCase === useCase} onClick={() => setActiveUseCase(useCase)}>
-              {useCase === "all" ? "All prompts" : USE_CASE_META[useCase].label}
-              <span className="mono tabular-nums">{useCase === "all" ? PROMPTS.length : counts[useCase] ?? 0}</span>
+          {AUDIENCE_ORDER.map((audience) => (
+            <Chip key={audience} active={activeAudience === audience} onClick={() => setActiveAudience(audience)}>
+              {audience === "all" ? "All prompts" : AUDIENCE_META[audience].label}
+              <span className="mono tabular-nums">{audience === "all" ? PROMPTS.length : counts[audience] ?? 0}</span>
             </Chip>
           ))}
         </FilterToolbar>
@@ -76,8 +85,8 @@ export function PromptLibraryClient() {
           {visible.length === 0 ? (
             <EmptyState
               title="No matching prompts"
-              description="Try a different use case, tag, or prompt keyword."
-              action={<PrimaryButton onClick={() => { setQuery(""); setActiveUseCase("all"); }}>Clear filters</PrimaryButton>}
+              description="Try a different audience, tag, use case, or prompt keyword."
+              action={<PrimaryButton onClick={() => { setQuery(""); setActiveAudience("all"); }}>Clear filters</PrimaryButton>}
             />
           ) : (
             <div className="grid gap-3 md:grid-cols-2 2xl:grid-cols-3">
@@ -95,7 +104,7 @@ export function PromptLibraryClient() {
 }
 
 function PromptCard({ prompt, onOpen }: { prompt: PromptItem; onOpen: () => void }) {
-  const meta = USE_CASE_META[prompt.useCase];
+  const meta = AUDIENCE_META[prompt.audience];
   return (
     <Card className="flex flex-col p-3">
       <div className="mb-2 flex items-start justify-between gap-2">
@@ -105,12 +114,12 @@ function PromptCard({ prompt, onOpen }: { prompt: PromptItem; onOpen: () => void
             <LevelBadge level={prompt.level} />
           </div>
           <h2 className="line-clamp-2 text-sm font-bold leading-snug text-text-primary">{prompt.title}</h2>
-          <p className="mt-1 line-clamp-1 text-xs text-text-muted">{meta.description}</p>
+          <p className="mt-1 line-clamp-2 text-xs text-text-muted">{prompt.useCase}</p>
         </div>
       </div>
 
       <div className="min-h-0 flex-1">
-        <PromptPreview>{prompt.prompt}</PromptPreview>
+        <PromptPreview>{prompt.promptText}</PromptPreview>
       </div>
 
       <div className="mt-3 flex items-end justify-between gap-2">
@@ -120,7 +129,7 @@ function PromptCard({ prompt, onOpen }: { prompt: PromptItem; onOpen: () => void
           ))}
         </div>
         <div className="flex shrink-0 items-center gap-1">
-          <CopyButton text={prompt.prompt} label="prompt" />
+          <CopyButton text={prompt.promptText} label="prompt" />
           <button
             type="button"
             onClick={onOpen}
@@ -136,7 +145,7 @@ function PromptCard({ prompt, onOpen }: { prompt: PromptItem; onOpen: () => void
 }
 
 function PromptDrawer({ prompt, onClose }: { prompt: PromptItem; onClose: () => void }) {
-  const meta = USE_CASE_META[prompt.useCase];
+  const meta = AUDIENCE_META[prompt.audience];
   return (
     <div className="fixed inset-0 z-[70] bg-text-primary/24" role="presentation" onClick={onClose}>
       <aside
@@ -161,14 +170,73 @@ function PromptDrawer({ prompt, onClose }: { prompt: PromptItem; onClose: () => 
             <LevelBadge level={prompt.level} />
             {prompt.tags.map((tag) => <Badge key={tag}>#{tag}</Badge>)}
           </div>
-          <div className="rounded-md border border-border bg-bg-main p-4">
-            <p className="mono whitespace-pre-wrap text-sm leading-relaxed text-text-secondary">{prompt.prompt}</p>
-          </div>
+
+          <DrawerSection title="Use Case">
+            <p className="text-sm leading-relaxed text-text-secondary">{prompt.useCase}</p>
+          </DrawerSection>
+
+          <DrawerSection title="Input Required">
+            <DrawerList items={prompt.inputRequired} />
+          </DrawerSection>
+
+          <DrawerSection title="Prompt">
+            <div className="rounded-md border border-border bg-bg-main p-4">
+              <p className="mono whitespace-pre-wrap text-sm leading-relaxed text-text-secondary">{prompt.promptText}</p>
+            </div>
+          </DrawerSection>
+
+          <DrawerSection title="Output Format">
+            <p className="text-sm leading-relaxed text-text-secondary">{prompt.outputFormat}</p>
+          </DrawerSection>
+
+          <DrawerSection title="Constraints">
+            <DrawerList items={prompt.constraints} />
+          </DrawerSection>
+
+          <DrawerSection title="Best Used With">
+            <div className="flex flex-wrap gap-1.5">
+              {prompt.bestUsedWith.map((tool) => <Badge key={tool}>{tool}</Badge>)}
+            </div>
+          </DrawerSection>
+
+          {prompt.exampleInput && (
+            <DrawerSection title="Example Input">
+              <p className="mono rounded-md border border-border bg-bg-main p-3 text-xs leading-relaxed text-text-secondary">{prompt.exampleInput}</p>
+            </DrawerSection>
+          )}
+
+          {prompt.expectedOutputPreview && (
+            <DrawerSection title="Expected Output Preview">
+              <p className="mono rounded-md border border-border bg-bg-main p-3 text-xs leading-relaxed text-text-muted">{prompt.expectedOutputPreview}</p>
+            </DrawerSection>
+          )}
         </div>
         <div className="flex shrink-0 justify-end border-t border-border bg-bg-main px-4 py-3">
-          <CopyButton text={prompt.prompt} label="prompt" />
+          <CopyButton text={prompt.promptText} label="prompt" />
         </div>
       </aside>
     </div>
+  );
+}
+
+function DrawerSection({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <section className="mb-4">
+      <h3 className="mono mb-1.5 text-[11px] font-bold uppercase tracking-[0.12em] text-text-muted">{title}</h3>
+      {children}
+    </section>
+  );
+}
+
+function DrawerList({ items }: { items: string[] }) {
+  return (
+    <ul className="grid gap-1">
+      {items.map((item, index) => (
+        <li key={index} className="flex gap-2 text-sm leading-relaxed text-text-secondary">
+          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-text-muted" />
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
   );
 }

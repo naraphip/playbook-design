@@ -1,8 +1,8 @@
-import type { VisualType } from "@/types/playbook";
+import type { DemoData, VisualDemoType } from "@/types/playbook";
 import { DemoRenderer } from "./demos/DemoRenderer";
 
-type Props = { visualType: VisualType };
+type Props = { visualDemo: VisualDemoType; demoData?: DemoData };
 
-export function VisualDemo({ visualType }: Props) {
-  return <DemoRenderer type={visualType} />;
+export function VisualDemo({ visualDemo, demoData }: Props) {
+  return <DemoRenderer type={visualDemo} data={demoData} />;
 }

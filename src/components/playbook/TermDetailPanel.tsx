@@ -13,38 +13,9 @@ type Props = {
   onBookmark: (slug: string) => void;
 };
 
-function fallbackWhenToUse(term: UXTerm) {
-  return term.whenToUse && term.whenToUse.length > 0
-    ? term.whenToUse
-    : [
-        `ใช้เมื่อ review หรือ implement ${term.term} ใน SaaS dashboard, admin panel, landing page หรือ mobile flow`,
-        "ใช้ตอนเขียน acceptance criteria, prompt ให้ AI coding agent, หรือ handoff ให้ designer/developer",
-      ];
-}
-
-function fallbackExamples(term: UXTerm) {
-  return term.examples.length > 0
-    ? term.examples
-    : [
-        `${term.term} ใน SaaS dashboard ต้องมี state และ responsive behavior ที่ชัดเจน`,
-        `${term.term} ใน mobile form ต้องคุม touch target, error copy และ keyboard flow`,
-      ];
-}
-
-function fallbackPrompts(term: UXTerm) {
-  return term.prompts.length > 0
-    ? term.prompts
-    : [
-        `Audit ${term.term} in this product. Explain what is working, what creates friction, and provide specific implementation fixes using the current design system tokens and shared components.`,
-      ];
-}
-
 export function TermDetailPanel({ term, isBookmarked, onBookmark }: Props) {
   const catMeta = CATEGORIES.find((c) => c.id === term.category);
   const relatedTerms = TERMS.filter((t) => term.relatedSlugs.includes(t.slug)).slice(0, 8);
-  const whenToUse = fallbackWhenToUse(term);
-  const examples = fallbackExamples(term);
-  const prompts = fallbackPrompts(term);
 
   return (
     <div className="flex h-full flex-col overflow-hidden bg-bg-main">
@@ -73,15 +44,14 @@ export function TermDetailPanel({ term, isBookmarked, onBookmark }: Props) {
         <div className="mx-auto max-w-4xl space-y-4">
           <header className="rounded-lg border border-border bg-bg-surface p-4 shadow-card">
             <div className="mb-3 flex items-start gap-3">
-              <span className="mono flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border bg-bg-main text-[11px] font-black uppercase text-text-muted">
-                {term.icon.slice(0, 4)}
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border bg-bg-main text-xl">
+                {term.icon}
               </span>
               <div className="min-w-0">
                 <h1 className="text-2xl font-bold leading-tight text-text-primary">{term.term}</h1>
-                {term.pronunciation && <p className="mono mt-0.5 text-[11px] text-text-muted">/{term.pronunciation}/</p>}
               </div>
             </div>
-            <p className="text-sm leading-relaxed text-text-secondary">{term.shortDefinition}</p>
+            <p className="text-sm leading-relaxed text-text-secondary">{term.shortDescription}</p>
             <div className="mt-3 flex flex-wrap gap-1.5">
               {term.tags.map((tag) => (
                 <span key={tag} className="mono rounded border border-border bg-bg-soft px-1.5 py-0.5 text-[10px] text-text-muted">
@@ -97,22 +67,36 @@ export function TermDetailPanel({ term, isBookmarked, onBookmark }: Props) {
           </section>
 
           <section className="grid gap-3 xl:grid-cols-2">
-            <ListBlock title="When To Use" items={whenToUse} />
-            <ListBlock title="Examples" items={examples} />
+            <ListBlock title="When To Use" items={term.whenToUse} />
+            <ListBlock title="When Not To Use" items={term.whenNotToUse} danger />
           </section>
 
+          <ListBlock title="How To Apply" items={term.howToApply} ordered />
+
+          <section className="grid gap-3 xl:grid-cols-2">
+            <ListBlock title="Checklist" items={term.checklist} check />
+            <ListBlock title="Deliverables" items={term.deliverables} />
+          </section>
+
+          <section className="grid gap-3 xl:grid-cols-2">
+            <ExampleBlock title="Good Example" body={term.goodExample} good />
+            <ExampleBlock title="Bad Example" body={term.badExample} />
+          </section>
+
+          <ListBlock title="Common Mistakes" items={term.commonMistakes} danger />
+
           <section className="rounded-lg border border-border bg-bg-surface p-4 shadow-card">
-            <SectionHeader title="Prompt Examples" meta={`${prompts.length} ready to copy`} />
+            <SectionHeader title="Prompt Examples" meta={`${term.prompts.length} ready to copy`} />
             <div className="space-y-2">
-              {prompts.map((prompt, index) => (
+              {term.prompts.map((prompt, index) => (
                 <PromptBox key={`${term.id}-prompt-${index}`} prompt={prompt} index={index} />
               ))}
             </div>
           </section>
 
           <section className="rounded-lg border border-border bg-bg-surface p-4 shadow-card">
-            <SectionHeader title="Visual Demo" meta={term.visualType} />
-            <DemoRenderer type={term.visualType} config={term.demoConfig} />
+            <SectionHeader title="Visual Demo" meta={term.visualDemo} />
+            <DemoRenderer type={term.visualDemo} data={term.demoData} />
           </section>
 
           <section className="rounded-lg border border-border bg-bg-surface p-4 shadow-card">
@@ -147,18 +131,39 @@ function InfoBlock({ title, children, accent }: { title: string; children: strin
   );
 }
 
-function ListBlock({ title, items }: { title: string; items: string[] }) {
+function ListBlock({ title, items, ordered, danger, check }: { title: string; items: string[]; ordered?: boolean; danger?: boolean; check?: boolean }) {
+  const Tag = ordered ? "ol" : "ul";
   return (
     <section className="rounded-lg border border-border bg-bg-surface p-4 shadow-card">
       <h2 className="mono mb-2 text-[11px] font-bold uppercase tracking-[0.12em] text-text-muted">{title}</h2>
-      <ul className="space-y-1.5">
+      <Tag className="space-y-1.5">
         {items.map((item, index) => (
           <li key={`${title}-${index}`} className="flex gap-2 text-sm leading-relaxed text-text-secondary">
-            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-text-muted" />
+            {ordered ? (
+              <span className="mono mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent/25 bg-accent-soft text-[10px] font-black text-accent">{index + 1}</span>
+            ) : check ? (
+              <span className="mono mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded border border-success/40 bg-success-soft text-[9px] font-black text-success">✓</span>
+            ) : (
+              <span className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-full ${danger ? "bg-danger" : "bg-text-muted"}`} />
+            )}
             <span>{item}</span>
           </li>
         ))}
-      </ul>
+      </Tag>
+    </section>
+  );
+}
+
+function ExampleBlock({ title, body, good }: { title: string; body: string; good?: boolean }) {
+  return (
+    <section
+      className={`rounded-lg border p-4 shadow-card ${good ? "border-success/25 bg-success-soft/40" : "border-danger/25 bg-danger-soft/30"}`}
+    >
+      <h2 className={`mono mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.12em] ${good ? "text-success" : "text-danger"}`}>
+        <span className={`h-2 w-2 rounded-full ${good ? "bg-success" : "bg-danger"}`} />
+        {title}
+      </h2>
+      <p className="text-sm leading-relaxed text-text-secondary">{body}</p>
     </section>
   );
 }

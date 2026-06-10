@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const term = TERMS.find((t) => t.slug === slug);
   if (!term) return {};
-  return { title: term.term, description: term.shortDefinition };
+  return { title: term.term, description: term.shortDescription };
 }
 
 export default async function TermDetailPage({ params }: Props) {
@@ -54,12 +54,12 @@ export default async function TermDetailPage({ params }: Props) {
             <span className="text-5xl">{term.icon}</span>
             <div>
               <h1 className="text-2xl font-bold text-text-primary">{term.term}</h1>
-              {term.pronunciation && (
-                <p className="text-sm text-text-muted mt-0.5">/{term.pronunciation}/</p>
+              {term.aliases && term.aliases.length > 0 && (
+                <p className="text-sm text-text-muted mt-0.5">{term.aliases.join(" · ")}</p>
               )}
             </div>
           </div>
-          <p className="mt-4 text-lg text-text-secondary leading-relaxed">{term.shortDefinition}</p>
+          <p className="mt-4 text-lg text-text-secondary leading-relaxed">{term.shortDescription}</p>
           <TagList tags={term.tags} />
         </div>
 
@@ -75,20 +75,45 @@ export default async function TermDetailPage({ params }: Props) {
           <p className="text-text-secondary leading-relaxed">{term.whyItMatters}</p>
         </section>
 
-        {/* Examples */}
-        {term.examples.length > 0 && (
-          <section className="mb-6">
-            <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-text-muted">Examples</h2>
-            <ul className="space-y-2">
-              {term.examples.map((ex, i) => (
-                <li key={i} className="flex gap-2 text-text-secondary">
-                  <span className="text-primary font-bold shrink-0">•</span>
-                  <span>{ex}</span>
-                </li>
-              ))}
-            </ul>
+        {/* When To Use / When Not To Use */}
+        <div className="mb-6 grid gap-4 sm:grid-cols-2">
+          <BulletSection title="When To Use" items={term.whenToUse} />
+          <BulletSection title="When Not To Use" items={term.whenNotToUse} danger />
+        </div>
+
+        {/* How To Apply */}
+        <section className="mb-6 rounded-2xl border border-border bg-bg-surface p-5 shadow-sm">
+          <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-text-muted">How To Apply</h2>
+          <ol className="space-y-2">
+            {term.howToApply.map((step, i) => (
+              <li key={i} className="flex gap-3 text-text-secondary leading-relaxed">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-accent/25 bg-accent-soft text-xs font-bold text-accent">{i + 1}</span>
+                <span>{step}</span>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        {/* Checklist + Deliverables */}
+        <div className="mb-6 grid gap-4 sm:grid-cols-2">
+          <BulletSection title="Checklist" items={term.checklist} check />
+          <BulletSection title="Deliverables" items={term.deliverables} />
+        </div>
+
+        {/* Good vs Bad Example */}
+        <div className="mb-6 grid gap-4 sm:grid-cols-2">
+          <section className="rounded-2xl border border-success/25 bg-success-soft/40 p-5">
+            <h2 className="mb-2 text-xs font-bold uppercase tracking-widest text-success">Good Example</h2>
+            <p className="text-text-secondary leading-relaxed text-sm">{term.goodExample}</p>
           </section>
-        )}
+          <section className="rounded-2xl border border-danger/25 bg-danger-soft/30 p-5">
+            <h2 className="mb-2 text-xs font-bold uppercase tracking-widest text-danger">Bad Example</h2>
+            <p className="text-text-secondary leading-relaxed text-sm">{term.badExample}</p>
+          </section>
+        </div>
+
+        {/* Common Mistakes */}
+        <BulletSection title="Common Mistakes" items={term.commonMistakes} danger className="mb-6" />
 
         {/* Prompts */}
         {term.prompts.length > 0 && (
@@ -104,7 +129,7 @@ export default async function TermDetailPage({ params }: Props) {
 
         {/* Visual Demo */}
         <section className="mb-6">
-          <VisualDemo visualType={term.visualType} />
+          <VisualDemo visualDemo={term.visualDemo} demoData={term.demoData} />
         </section>
 
         {/* Related Terms */}
@@ -127,5 +152,25 @@ export default async function TermDetailPage({ params }: Props) {
         )}
       </main>
     </div>
+  );
+}
+
+function BulletSection({ title, items, danger, check, className = "" }: { title: string; items: string[]; danger?: boolean; check?: boolean; className?: string }) {
+  return (
+    <section className={`rounded-2xl border border-border bg-bg-surface p-5 shadow-sm ${className}`}>
+      <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-text-muted">{title}</h2>
+      <ul className="space-y-2">
+        {items.map((item, i) => (
+          <li key={i} className="flex gap-2 text-text-secondary leading-relaxed text-sm">
+            {check ? (
+              <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded border border-success/40 bg-success-soft text-[9px] font-black text-success">✓</span>
+            ) : (
+              <span className={`font-bold shrink-0 ${danger ? "text-danger" : "text-primary"}`}>•</span>
+            )}
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }

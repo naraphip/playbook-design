@@ -11,14 +11,6 @@ function normalizeCategory(category: string) {
   return category.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
-function categoryLabel(category: string) {
-  return category
-    .split(/[-\s]+/)
-    .filter(Boolean)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(" ");
-}
-
 function filterTechniques(techniques: Technique[], query: string, category: string) {
   const q = query.trim().toLowerCase();
   return techniques.filter((technique) => {
@@ -27,26 +19,28 @@ function filterTechniques(techniques: Technique[], query: string, category: stri
     return [
       technique.title,
       technique.category,
-      technique.whatItIs,
-      ...technique.whenToUse,
-      ...technique.howToDoIt,
-      technique.examplePrompt,
+      technique.useCase,
+      ...technique.inputNeeded,
+      ...technique.steps,
+      technique.output,
+      ...technique.decisionCriteria,
+      technique.prompt,
       ...technique.commonMistakes,
       ...technique.tags,
-      ...(technique.relatedTerms ?? []),
+      ...technique.relatedSlugs,
     ].join(" ").toLowerCase().includes(q);
   });
 }
 
 export function TechniquesClient() {
   const [query, setQuery] = useState("");
-  const categories = useMemo(() => Array.from(new Set(TECHNIQUES.map((technique) => normalizeCategory(technique.category)))), []);
+  const categories = useMemo(() => Array.from(new Set(TECHNIQUES.map((technique) => technique.category))), []);
   const [activeCategory, setActiveCategory] = useState("all");
   const [openId, setOpenId] = useState(TECHNIQUES[0]?.id ?? "");
   const visible = useMemo(() => filterTechniques(TECHNIQUES, query, activeCategory), [query, activeCategory]);
 
   return (
-    <AppShell activeRoute="techniques" topbarSlot={<SearchInput value={query} onChange={setQuery} placeholder="Search techniques, deliverables, mistakes..." label="Search techniques" className="mx-auto max-w-2xl" />}>
+    <AppShell activeRoute="techniques" topbarSlot={<SearchInput value={query} onChange={setQuery} placeholder="Search techniques, steps, outputs, criteria..." label="Search techniques" className="mx-auto max-w-2xl" />}>
       <div className="flex h-full min-h-0 flex-col overflow-hidden bg-bg-main">
         <PageHeader
           title="UX/UI Techniques"
@@ -59,8 +53,8 @@ export function TechniquesClient() {
             All <span className="mono">{TECHNIQUES.length}</span>
           </Chip>
           {categories.map((category) => (
-            <Chip key={category} active={activeCategory === category} onClick={() => setActiveCategory(category)}>
-              {categoryLabel(category)}
+            <Chip key={category} active={activeCategory === normalizeCategory(category)} onClick={() => setActiveCategory(normalizeCategory(category))}>
+              {category}
             </Chip>
           ))}
         </FilterToolbar>
@@ -90,7 +84,6 @@ export function TechniquesClient() {
 }
 
 function TechniqueAccordion({ technique, open, onToggle }: { technique: Technique; open: boolean; onToggle: () => void }) {
-  const deliverable = getDeliverable(technique);
   return (
     <Card className={`overflow-hidden border-l-[3px] ${open ? "border-l-accent" : "border-l-border-strong"}`}>
       <button
@@ -101,36 +94,66 @@ function TechniqueAccordion({ technique, open, onToggle }: { technique: Techniqu
       >
         <div className="min-w-0 flex-1">
           <div className="mb-1 flex flex-wrap items-center gap-1.5">
-            <Badge>{categoryLabel(normalizeCategory(technique.category))}</Badge>
-            <Badge>{technique.tags.slice(0, 2).join(" / ")}</Badge>
+            <Badge>{technique.category}</Badge>
+            <Badge>{technique.difficulty}</Badge>
+            <Badge>⏱ {technique.timeRequired.split("(")[0].trim()}</Badge>
           </div>
           <h2 className="text-sm font-bold text-text-primary">{technique.title}</h2>
-          <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-text-muted">{technique.whatItIs}</p>
+          <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-text-muted">{technique.useCase}</p>
         </div>
         <ChevronDown size={16} className={`mt-1 shrink-0 text-text-muted transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
         <div className="border-t border-border bg-bg-main px-4 py-4">
-          <div className="grid gap-3 xl:grid-cols-2">
-            <TextSection title="What It Is" body={technique.whatItIs} />
-            <ListSection title="When To Use" items={technique.whenToUse} />
-            <ListSection title="How To Run" items={technique.howToDoIt} ordered />
-            <TextSection title="Deliverable" body={deliverable} />
+          <div className="grid gap-3 sm:grid-cols-2">
+            <MetaItem label="Time Required" value={technique.timeRequired} />
+            <MetaItem label="Participants" value={technique.participants} />
+          </div>
+          <div className="mt-3 grid gap-3 xl:grid-cols-2">
+            <ListSection title="Input Needed" items={technique.inputNeeded} />
+            <TextSection title="Output" body={technique.output} />
+          </div>
+          <div className="mt-3">
+            <ListSection title="Step-by-Step Process" items={technique.steps} ordered />
+          </div>
+          <div className="mt-3 grid gap-3 xl:grid-cols-2">
+            <ListSection title="Decision Criteria" items={technique.decisionCriteria} />
+            <ListSection title="Common Mistakes" items={technique.commonMistakes} danger />
+          </div>
+          <div className="mt-3">
+            <TextSection title="Example Scenario" body={technique.exampleScenario} />
           </div>
           <div className="mt-3 rounded-md border border-border bg-bg-surface p-3">
             <div className="mb-2 flex items-center justify-between gap-2">
-              <h3 className="mono text-[11px] font-bold uppercase tracking-[0.12em] text-text-muted">Example Prompt</h3>
-              <CopyButton text={technique.examplePrompt} label="prompt" />
+              <h3 className="mono text-[11px] font-bold uppercase tracking-[0.12em] text-text-muted">Template</h3>
+              <CopyButton text={technique.template} label="template" />
             </div>
-            <p className="mono whitespace-pre-wrap text-[11px] leading-relaxed text-text-secondary">{technique.examplePrompt}</p>
+            <p className="mono whitespace-pre-wrap text-[11px] leading-relaxed text-text-secondary">{technique.template}</p>
           </div>
-          <div className="mt-3 grid gap-3 xl:grid-cols-2">
-            <ListSection title="Common Mistakes" items={technique.commonMistakes} danger />
-            <ListSection title="Related Terms" items={(technique.relatedTerms && technique.relatedTerms.length > 0 ? technique.relatedTerms : technique.tags).slice(0, 6)} compact />
+          <div className="mt-3 rounded-md border border-border bg-bg-surface p-3">
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <h3 className="mono text-[11px] font-bold uppercase tracking-[0.12em] text-text-muted">AI Prompt</h3>
+              <CopyButton text={technique.prompt} label="prompt" />
+            </div>
+            <p className="mono whitespace-pre-wrap text-[11px] leading-relaxed text-text-secondary">{technique.prompt}</p>
           </div>
+          {technique.relatedSlugs.length > 0 && (
+            <div className="mt-3">
+              <ListSection title="Related Terms" items={technique.relatedSlugs.slice(0, 6)} compact />
+            </div>
+          )}
         </div>
       )}
     </Card>
+  );
+}
+
+function MetaItem({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-md border border-border bg-bg-surface px-3 py-2">
+      <p className="mono text-[10px] font-bold uppercase tracking-[0.12em] text-text-muted">{label}</p>
+      <p className="mt-0.5 text-xs leading-relaxed text-text-secondary">{value}</p>
+    </div>
   );
 }
 
@@ -151,20 +174,15 @@ function ListSection({ title, items, ordered, danger, compact }: { title: string
       <Tag className={`grid ${compact ? "gap-1" : "gap-1.5"}`}>
         {items.map((item, index) => (
           <li key={`${title}-${index}`} className="flex gap-2 text-sm leading-relaxed text-text-secondary">
-            <span className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-full ${danger ? "bg-danger" : "bg-text-muted"}`} />
+            {ordered ? (
+              <span className="mono mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-accent/25 bg-accent-soft text-[10px] font-black text-accent">{index + 1}</span>
+            ) : (
+              <span className={`mt-2 h-1.5 w-1.5 shrink-0 rounded-full ${danger ? "bg-danger" : "bg-text-muted"}`} />
+            )}
             <span>{item}</span>
           </li>
         ))}
       </Tag>
     </section>
   );
-}
-
-function getDeliverable(technique: Technique) {
-  const category = technique.category.toLowerCase();
-  if (category.includes("research")) return "Finding summary with participant evidence, severity, recommendation, and decision needed from the team.";
-  if (category.includes("accessibility")) return "Prioritized accessibility report with WCAG mapping, reproduction steps, and implementation-ready fixes.";
-  if (category.includes("handoff") || category.includes("lead")) return "Decision log, acceptance criteria, owner, open questions, and component/state checklist.";
-  if (category.includes("conversion")) return "Impact/effort backlog with hypothesis, metric, experiment idea, and copy/layout changes.";
-  return "Structured review notes with severity, rationale, owner, and next action.";
 }

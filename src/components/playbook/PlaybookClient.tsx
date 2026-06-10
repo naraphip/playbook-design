@@ -22,13 +22,16 @@ function searchTerms(terms: UXTerm[], q: string): UXTerm[] {
   const query = q.toLowerCase().trim();
   if (!query) return terms;
   return terms.filter((t) => {
+    const categoryLabel = CATEGORIES.find((c) => c.id === t.category)?.label ?? t.category;
     const haystack = [
       t.term,
       ...(t.aliases ?? []),
-      t.shortDefinition,
+      t.shortDescription,
       t.fullDefinition,
       t.whyItMatters,
-      ...t.examples,
+      categoryLabel,
+      ...t.checklist,
+      ...t.relatedSlugs,
       ...t.prompts,
       ...t.tags,
     ].join(" ").toLowerCase();
